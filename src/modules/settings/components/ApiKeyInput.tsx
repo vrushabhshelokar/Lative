@@ -4,26 +4,61 @@ import { useSettings } from '../hooks/useSettings';
 import { Input } from '@/shared/components/Input';
 import { Button } from '@/shared/components/Button';
 import { useToast } from '@/shared/hooks/useToast';
+import { validateApiKey } from '@/modules/ai';
 
 export const ApiKeyInput: React.FC = () => {
-  const { settings, updateApiKey } = useSettings();
-  const [apiKeyInput, setApiKeyInput] = useState(settings.geminiApiKey);
+  const { settings, updateAiConfig } = useSettings();
+  const [apiKeyInput, setApiKeyInput] = useState(settings.aiConfig.apiKey);
   const [showKey, setShowKey] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
-    setApiKeyInput(settings.geminiApiKey);
-  }, [settings.geminiApiKey]);
+    setApiKeyInput(settings.aiConfig.apiKey);
+  }, [settings.aiConfig.apiKey]);
 
   const handleSaveApiKey = async (e: React.FormEvent) => {
     e.preventDefault();
+    const trimmedKey = apiKeyInput.trim();
+    
+    if (!trimmedKey) {
+      try {
+        setIsLoading(true);
+        await updateAiConfig({
+          apiKey: '',
+          selectedModel: '',
+          availableModels: [],
+          validatedAt: ''
+        });
+        toast.success('Gemini API Key removed.');
+      } catch {
+        toast.error('Failed to update API Key.');
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
+
     try {
       setIsLoading(true);
-      await updateApiKey(apiKeyInput);
-      toast.success('Gemini API Key saved.');
-    } catch {
-      toast.error('Failed to save API Key.');
+      const validationResult = await validateApiKey(trimmedKey);
+      
+      if (!validationResult.valid) {
+        toast.error(validationResult.message || 'API Key validation failed.');
+        return;
+      }
+
+      await updateAiConfig({
+        apiKey: trimmedKey,
+        selectedModel: validationResult.selectedModel,
+        availableModels: validationResult.availableModels,
+        validatedAt: new Date().toISOString()
+      });
+      
+      toast.success(`API Key validated. Selected model: ${validationResult.selectedModel}`);
+    } catch (err: unknown) {
+      const errorObj = err as Error;
+      toast.error(errorObj.message || 'Key validation encountered an error.');
     } finally {
       setIsLoading(false);
     }
@@ -56,6 +91,14 @@ export const ApiKeyInput: React.FC = () => {
             {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
+        
+        {settings.aiConfig.selectedModel && (
+          <div className="text-[10px] text-text-secondary flex flex-col gap-0.5 mt-0.5">
+            <div>Model: <span className="font-semibold text-text-primary">{settings.aiConfig.selectedModel}</span></div>
+            <div>Validated: <span className="text-text-primary">{new Date(settings.aiConfig.validatedAt).toLocaleString()}</span></div>
+          </div>
+        )}
+
         <Button
           type="submit"
           variant="primary"

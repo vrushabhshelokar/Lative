@@ -8,6 +8,7 @@ import { ResumeView } from '@/modules/resume';
 import { CertificateView } from '@/modules/certificate';
 import { CartView } from '@/modules/cart';
 import { SettingsView } from '@/modules/settings';
+import { AiPanel } from '@/modules/ai';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTabState] = useState<TabId>('links');
@@ -47,7 +48,7 @@ export const App: React.FC = () => {
       case 'certificate':
         return <CertificateView />;
       case 'ai':
-        return <div className="text-sm text-text-secondary">AI Module (Unimplemented)</div>;
+        return <AiPanel />;
       case 'cart':
         return <CartView />;
       case 'settings':

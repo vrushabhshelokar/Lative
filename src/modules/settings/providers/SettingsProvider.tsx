@@ -1,12 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { settingsStore } from '../storage/settingsStore';
-import { AppSettings, ThemeType } from '../types';
+import { settingsStore, DEFAULT_AI_CONFIG } from '../storage/settingsStore';
+import { AppSettings, ThemeType, AIConfig } from '../types';
 
 export interface SettingsContextType {
   settings: AppSettings;
   isLoading: boolean;
-  updateApiKey: (key: string) => Promise<void>;
+  updateAiConfig: (config: Partial<AIConfig>) => Promise<void>;
   updateTheme: (theme: ThemeType) => Promise<void>;
   updateFloatingButtonEnabled: (enabled: boolean) => Promise<void>;
   clearSettings: () => Promise<void>;
@@ -16,7 +16,7 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [settings, setSettings] = useState<AppSettings>({
-    geminiApiKey: '',
+    aiConfig: DEFAULT_AI_CONFIG,
     theme: 'system',
     floatingButtonEnabled: false
   });
@@ -66,9 +66,10 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [settings.theme]);
 
-  const updateApiKey = async (key: string) => {
-    await settingsStore.setApiKey(key);
-    setSettings((prev) => ({ ...prev, geminiApiKey: key.trim() }));
+  const updateAiConfig = async (newConfig: Partial<AIConfig>) => {
+    const updatedConfig = { ...settings.aiConfig, ...newConfig };
+    await settingsStore.setAiConfig(updatedConfig);
+    setSettings((prev) => ({ ...prev, aiConfig: updatedConfig }));
   };
 
   const updateTheme = async (newTheme: ThemeType) => {
@@ -108,7 +109,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const clearSettings = async () => {
     await settingsStore.clearAllSettings();
     setSettings({
-      geminiApiKey: '',
+      aiConfig: DEFAULT_AI_CONFIG,
       theme: 'system',
       floatingButtonEnabled: false
     });
@@ -119,7 +120,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       value={{
         settings,
         isLoading,
-        updateApiKey,
+        updateAiConfig,
         updateTheme,
         updateFloatingButtonEnabled,
         clearSettings

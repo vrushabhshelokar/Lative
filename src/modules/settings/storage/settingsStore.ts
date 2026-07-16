@@ -1,8 +1,17 @@
 import { safeStorage } from '@/lib/chrome';
-import { AppSettings, ThemeType } from '../types';
+import { AppSettings, ThemeType, AIConfig } from '../types';
+
+export const DEFAULT_AI_CONFIG: AIConfig = {
+  provider: 'google',
+  apiKey: '',
+  selectedModel: '',
+  availableModels: [],
+  sdkVersion: '@google/genai@0.21.0',
+  validatedAt: ''
+};
 
 const DEFAULT_SETTINGS: AppSettings = {
-  geminiApiKey: '',
+  aiConfig: DEFAULT_AI_CONFIG,
   theme: 'system',
   floatingButtonEnabled: false
 };
@@ -12,7 +21,17 @@ export const settingsStore = {
    * Retrieves all user settings preferences.
    */
   getSettings: async (): Promise<AppSettings> => {
-    const geminiApiKey = (await safeStorage.get('geminiApiKey', DEFAULT_SETTINGS.geminiApiKey)) as string;
+    let aiConfig = (await safeStorage.get('aiConfig', null)) as AIConfig | null;
+    
+    // Backwards compatibility migration
+    if (!aiConfig) {
+      const legacyKey = (await safeStorage.get('geminiApiKey', '')) as string;
+      aiConfig = {
+        ...DEFAULT_AI_CONFIG,
+        apiKey: legacyKey
+      };
+    }
+
     const theme = (await safeStorage.get('theme', DEFAULT_SETTINGS.theme)) as ThemeType;
     const floatingButtonEnabled = (await safeStorage.get(
       'floatingButtonEnabled',
@@ -20,24 +39,17 @@ export const settingsStore = {
     )) as boolean;
 
     return {
-      geminiApiKey,
+      aiConfig,
       theme,
       floatingButtonEnabled
     };
   },
 
   /**
-   * Retrieves the saved Gemini API key.
+   * Saves the AI configuration.
    */
-  getApiKey: async (): Promise<string> => {
-    return (await safeStorage.get('geminiApiKey', DEFAULT_SETTINGS.geminiApiKey)) as string;
-  },
-
-  /**
-   * Saves the Gemini API key.
-   */
-  setApiKey: async (key: string): Promise<void> => {
-    await safeStorage.set('geminiApiKey', key.trim());
+  setAiConfig: async (config: AIConfig): Promise<void> => {
+    await safeStorage.set('aiConfig', config);
   },
 
   /**
@@ -75,7 +87,8 @@ export const settingsStore = {
    * Resets all settings to their default values.
    */
   clearAllSettings: async (): Promise<void> => {
-    await safeStorage.set('geminiApiKey', DEFAULT_SETTINGS.geminiApiKey);
+    await safeStorage.set('aiConfig', DEFAULT_SETTINGS.aiConfig);
+    await safeStorage.set('geminiApiKey', ''); // clear legacy key too
     await safeStorage.set('theme', DEFAULT_SETTINGS.theme);
     await safeStorage.set('floatingButtonEnabled', DEFAULT_SETTINGS.floatingButtonEnabled);
   }

@@ -36,13 +36,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Floating button toggle control subcomponent (`src/modules/settings/components/FloatingButtonToggle.tsx`) connecting UI check triggers with settings hook modifiers.
 - Database clearing panel component (`src/modules/settings/components/ClearDataButton.tsx`) running transactions to wipe IndexedDB tables.
 - Information section component (`src/modules/settings/components/AboutSection.tsx`) rendering tutorials and metadata fields.
+- Central model configuration constant (`src/shared/constants/ai.ts`) configuring DEFAULT_MODEL defaults.
+- Shared Gemini client service (`src/shared/services/geminiClient.ts`) wrapping Google Gen AI SDK class with proxy parameters.
+- Modular AI query wrapper service (`src/modules/ai/services/geminiService.ts`) mapping generation calls and key checks.
+- Gemini API Key validation utility (`src/modules/ai/utils/validateApiKey.ts`) validating credentials via low-overhead prompts.
+- Custom AI State Provider context and hook (`src/modules/ai/hooks/useAiContext.tsx`) managing selection state variables.
+- Chat message bubble display element (`src/modules/ai/components/ChatMessage.tsx`) supporting plain text whitespace rendering.
+- Scrollable chat message list layout container (`src/modules/ai/components/ChatContainer.tsx`) managing scroll-anchors and loading animations.
+- Custom query hook (`src/modules/ai/hooks/useChat.ts`) executing Gemini requests and managing error statuses.
+- Resume selector dropdown menu element (`src/modules/ai/components/ResumeSelector.tsx`) binding configuration options.
+- AI Panel wrapper component (`src/modules/ai/components/AiPanel.tsx`) coordinating select dropdown inputs, chat sections, and text prompt fields.
+- AI module barrel index mapping exports (`src/modules/ai/index.ts`).
 - Settings barrel index exports wrapper (`index.ts`).
 
 ### Changed
 - Synchronized and updated naming conventions rules in `Folder_Structure.md` to reflect PascalCase for React component files, camelCase for helper scripts, and `use*.ts` hook files.
 - Synchronized project memory in `Memory.md` by pruning duplicated roadmap items and maintaining long-term product context.
+- Mounted `AiProvider` wrapper at root `src/popup/main.tsx` popup entry point.
+- Mounted `AiPanel` container inside the main routing switcher (`src/app/App.tsx`) and replaced active tab placeholder elements.
+- Configured AI state provider (`src/modules/ai/hooks/useAiContext.tsx`) to manage in-memory message and active session loading states, resetting variables immediately on resume selection modifications.
+- Configured AI Panel container (`src/modules/ai/components/AiPanel.tsx`) to render scrollable lists and call query submissions hook.
+- Configured API key input component (`src/modules/settings/components/ApiKeyInput.tsx`) to validate Gemini API Keys asynchronously during saves, catching validation exceptions to display descriptive feedback toasts.
+- Refactored Gemini API Key validation utility (`src/modules/ai/utils/validateApiKey.ts`) to throw category-specific exceptions (network connectivity, quota limits, auth failures) instead of returning generic booleans.
+- Simplified wrapper definitions inside (`src/modules/ai/services/geminiService.ts`) to consume extracted validation tools.
 - Configured background service worker entry point `src/background/index.ts` to listen to runtime events and route Cart message tasks, and registered storage change watchers to transmit visibility messages reactively to content scripts on target web pages.
-- Modified manifest file `public/manifest.json` specifying document_idle script loading rules.
+- Modified manifest file `public/manifest.json` specifying document_idle script loading rules and declaring host permissions for `https://generativelanguage.googleapis.com/*` to unblock Gemini API requests.
+- Migrated Gemini API dependency from the legacy `@google/generative-ai` package to the new official unified `@google/genai` SDK package.
+- Refactored the settings module to define and store a structured `AIConfig` settings payload (containing provider, apiKey, selectedModel, availableModels, sdkVersion, and validatedAt parameters) in `chrome.storage.local`.
+- Introduced a provider-agnostic abstraction interface `AIProvider`, with a concrete `GeminiProvider` implementation isolating all Google-specific SDK operations (key validation, dynamic model discovery, text query generation, and model health diagnostics).
+- Introduced a central `ModelManager` service responsible for selecting preferred models according to prioritization rules and executing self-healing fallback operations.
+- Introduced `AIContextBuilder` and `PromptBuilder` services to gather input parameters (such as resume sections) and format them into plain-text query instructions, preventing hallucinations.
+- Created `ProviderFactory` to resolve and instantiate providers dynamically.
+- Refactored `ApiKeyInput` and `useChat` to utilize the new abstracted AI service boundaries.
+- Pruned deprecated legacy client/service files.
 - Modified content script index entry `src/content/index.ts` to manage loading toggles, listen to storage updates reactively, map message triggers, and dynamically display Toast status feedback.
 - Mounted `CertificateView` and `CartView` inside the active tab route switcher inside `src/app/App.tsx` and removed their respective unimplemented layout placeholders.
 

@@ -420,6 +420,92 @@
   - Developed [src/modules/settings/components/AboutSection.tsx](file:///d:/workspace/lative/src/modules/settings/components/AboutSection.tsx) displaying extension version information, feedback resources, and links.
   - Mounted new subcomponents inside [src/modules/settings/components/SettingsPage.tsx](file:///d:/workspace/lative/src/modules/settings/components/SettingsPage.tsx).
 
+## P9-T1: Gemini SDK Wrapper
+- **Date**: 2026-07-16
+- **Summary**: Installed Gemini SDK wrapper to shared services and created the AI generative query service wrapper.
+- **Details**:
+  - Developed [src/shared/constants/ai.ts](file:///d:/workspace/lative/src/shared/constants/ai.ts) declaring model configuration keys.
+  - Developed [src/shared/services/geminiClient.ts](file:///d:/workspace/lative/src/shared/services/geminiClient.ts) instantiating client SDK instances with proxy parameters.
+  - Developed [src/modules/ai/services/geminiService.ts](file:///d:/workspace/lative/src/modules/ai/services/geminiService.ts) wrapping content generation calls and validation methods.
+  - Created barrel index mappings [src/modules/ai/index.ts](file:///d:/workspace/lative/src/modules/ai/index.ts).
+
+## P9-T2: Key Validation Tool
+- **Date**: 2026-07-16
+- **Summary**: Created and integrated Gemini key check validators verifying authentication prior to local settings saving.
+- **Details**:
+  - Developed [src/modules/ai/utils/validateApiKey.ts](file:///d:/workspace/lative/src/modules/ai/utils/validateApiKey.ts) verifying key permissions against simple queries.
+  - Cleaned up duplicated validation definitions inside [src/modules/ai/services/geminiService.ts](file:///d:/workspace/lative/src/modules/ai/services/geminiService.ts).
+  - Modified [src/modules/settings/components/ApiKeyInput.tsx](file:///d:/workspace/lative/src/modules/settings/components/ApiKeyInput.tsx) executing validations during user key saving actions and printing status notifications.
+
+## P9-T3: Resume Selector Component
+- **Date**: 2026-07-16
+- **Summary**: Implemented the custom dropdown resume selector component and AI contexts wrapping local storage settings.
+- **Details**:
+  - Developed [src/modules/ai/hooks/useAiContext.tsx](file:///d:/workspace/lative/src/modules/ai/hooks/useAiContext.tsx) setting up the active AI provider, loading selections, and synchronizing entries against list updates.
+  - Developed [src/modules/ai/components/ResumeSelector.tsx](file:///d:/workspace/lative/src/modules/ai/components/ResumeSelector.tsx) rendering selector menus and managing choices.
+  - Mounted context provider wrapper inside [src/popup/main.tsx](file:///d:/workspace/lative/src/popup/main.tsx) hierarchy.
+  - Exported components inside AI barrel index.
+
+## P9-T4: AI UI Layout Container
+- **Date**: 2026-07-16
+- **Summary**: Developed the AI assistant layout view handling missing credentials, un-uploaded resumes, and prompt textbox forms.
+- **Details**:
+  - Developed container [src/modules/ai/components/AiPanel.tsx](file:///d:/workspace/lative/src/modules/ai/components/AiPanel.tsx) wrapping selectors and empty info cards.
+  - Integrated [src/app/App.tsx](file:///d:/workspace/lative/src/app/App.tsx) switcher route cases to load the AI container view when the user clicks the AI tab.
+
+## P9-T5: Session Chat UI
+- **Date**: 2026-07-16
+- **Summary**: Created conversation message cards, list containers, and the active session useChat submission hooks.
+- **Details**:
+  - Developed [src/modules/ai/components/ChatMessage.tsx](file:///d:/workspace/lative/src/modules/ai/components/ChatMessage.tsx) rendering user query bubbles and assistant response/error blocks using raw plain text styling.
+  - Developed [src/modules/ai/components/ChatContainer.tsx](file:///d:/workspace/lative/src/modules/ai/components/ChatContainer.tsx) wrapping message maps, loading bubbles, and automatic bottom scrolling.
+  - Developed [src/modules/ai/hooks/useChat.ts](file:///d:/workspace/lative/src/modules/ai/hooks/useChat.ts) mapping API submissions, setting up system instruction personas, and managing error toasts.
+  - Mounted controls inside [src/modules/ai/components/AiPanel.tsx](file:///d:/workspace/lative/src/modules/ai/components/AiPanel.tsx).
+
+## P9-T6: Resume Switch Action resets session
+- **Date**: 2026-07-16
+- **Summary**: Integrated reactive state monitors inside the active AI Provider to flush chat message history arrays immediately upon resume profile switches.
+- **Details**:
+  - Modified [src/modules/ai/hooks/useAiContext.tsx](file:///d:/workspace/lative/src/modules/ai/hooks/useAiContext.tsx) to introduce a selected resume monitor clearing active session messages and loading variables.
+
+## Bug Fix: Configure Extension Host Permissions (Fix Task A)
+- **Date**: 2026-07-16
+- **Summary**: Added host permissions to manifest configuration file unblocking CORS network fetches to Google Gemini APIs.
+- **Details**:
+  - Modified [public/manifest.json](file:///d:/workspace/lative/public/manifest.json) declaring host permissions for `https://generativelanguage.googleapis.com/*`.
+
+## Bug Fix: Refactor API Key Validator & UI Feedback (Fix Task B)
+- **Date**: 2026-07-16
+- **Summary**: Refactored key validation utilities to throw descriptive exceptions and updated Settings inputs to display specific messages.
+- **Details**:
+  - Modified [src/modules/ai/utils/validateApiKey.ts](file:///d:/workspace/lative/src/modules/ai/utils/validateApiKey.ts) to raise specific exceptions depending on network errors, invalid keys, or quota boundaries.
+  - Modified [src/modules/settings/components/ApiKeyInput.tsx](file:///d:/workspace/lative/src/modules/settings/components/ApiKeyInput.tsx) to catch and render descriptive error messages.
+
+## AI Foundation: Architecture Refactoring & Gemini SDK Migration
+- **Date**: 2026-07-16
+- **Summary**: Refactored the AI module to introduce a provider-agnostic abstraction layer, migrated to the official `@google/genai` SDK, introduced `ModelManager`, `PromptBuilder`, `AIContextBuilder`, `ProviderFactory` services, and extended Settings to use a structured `AIConfig` payload.
+- **Details**:
+  - Migrated SDK dependency from `@google/generative-ai` to `@google/genai` in `package.json`.
+  - Created [src/modules/ai/providers/AIProvider.ts](file:///d:/workspace/lative/src/modules/ai/providers/AIProvider.ts) declaring provider interfaces.
+  - Created [src/modules/ai/providers/GeminiProvider.ts](file:///d:/workspace/lative/src/modules/ai/providers/GeminiProvider.ts) implementing `@google/genai` client, models validation, discovery, and health checks.
+  - Created [src/modules/ai/providers/ProviderFactory.ts](file:///d:/workspace/lative/src/modules/ai/providers/ProviderFactory.ts) resolving provider class mappings.
+  - Created [src/modules/ai/services/modelManager.ts](file:///d:/workspace/lative/src/modules/ai/services/modelManager.ts) managing model prioritizing and single-retry fallback failover recovery.
+  - Created [src/modules/ai/services/promptBuilder.ts](file:///d:/workspace/lative/src/modules/ai/services/promptBuilder.ts) isolating prompt text formatting.
+  - Created [src/modules/ai/context/aiContextBuilder.ts](file:///d:/workspace/lative/src/modules/ai/context/aiContextBuilder.ts) compiling resume data.
+  - Created [src/modules/ai/services/aiService.ts](file:///d:/workspace/lative/src/modules/ai/services/aiService.ts) coordinating provider queries and fallback loops.
+  - Modified Settings schema and storage to manage the structured `AIConfig` configurations.
+  - Refactored `ApiKeyInput` and `useChat` hooks to leverage the newly designed AI Platform boundaries.
+  - Pruned deprecated legacy client/service files.
+
+
+
+
+
+
+
+
+
+
 
 
 

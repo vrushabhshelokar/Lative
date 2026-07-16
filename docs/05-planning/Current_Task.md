@@ -2,19 +2,19 @@
 
 ## Current
 
-Task ID: P9-T1
+Task ID: P9-T6
 
-Title: Gemini SDK Wrapper
+Title: Resume Switch Action resets session
 
 Phase: 9
 
-Status: Pending
+Status: Completed
 
 Dependencies:
-- P0-T2
+- P9-T5
 
 Definition of Done:
-- Client instantiates; placeholder query methods run without compilation warnings.
+- Changing active resumes immediately clears chat message histories.
 - Self-review completed.
 - Tests completed.
 - Documentation updated.
@@ -23,10 +23,10 @@ Definition of Done:
 
 ## Previous
 
-P8-T6
+P9-T5
 
 ---
 
 ## Next
 
-P9-T2 (Determine from implementation_roadmap.md after completion)
+P10-T1 (Determine from implementation_roadmap.md after completion)
