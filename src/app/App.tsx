@@ -5,6 +5,9 @@ import { safeStorage } from '@/lib/chrome';
 import { LinksView } from '@/modules/links';
 import { MailsView } from '@/modules/mail';
 import { ResumeView } from '@/modules/resume';
+import { CertificateView } from '@/modules/certificate';
+import { CartView } from '@/modules/cart';
+import { SettingsView } from '@/modules/settings';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTabState] = useState<TabId>('links');
@@ -42,13 +45,13 @@ export const App: React.FC = () => {
       case 'resume':
         return <ResumeView />;
       case 'certificate':
-        return <div className="text-sm text-text-secondary">Certificate Module (Unimplemented)</div>;
+        return <CertificateView />;
       case 'ai':
         return <div className="text-sm text-text-secondary">AI Module (Unimplemented)</div>;
       case 'cart':
-        return <div className="text-sm text-text-secondary">Cart Module (Unimplemented)</div>;
+        return <CartView />;
       case 'settings':
-        return <div className="text-sm text-text-secondary">Settings Module (Unimplemented)</div>;
+        return <SettingsView />;
       default:
         return null;
     }

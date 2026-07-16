@@ -2,19 +2,19 @@
 
 ## Current
 
-Task ID: P6-T1
+Task ID: P9-T1
 
-Title: Certificate Database Setup
+Title: Gemini SDK Wrapper
 
-Phase: 6
+Phase: 9
 
 Status: Pending
 
 Dependencies:
-- P1-T2
+- P0-T2
 
 Definition of Done:
-- Implement all requirements from the roadmap.
+- Client instantiates; placeholder query methods run without compilation warnings.
 - Self-review completed.
 - Tests completed.
 - Documentation updated.
@@ -23,10 +23,10 @@ Definition of Done:
 
 ## Previous
 
-P5-F2
+P8-T6
 
 ---
 
 ## Next
 
-P6-T2 (Determine from implementation_roadmap.md after completion)
+P9-T2 (Determine from implementation_roadmap.md after completion)

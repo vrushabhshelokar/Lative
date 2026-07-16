@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-alpha.2] - 2026-07-16
+### Added
+- Certificate module types defining the database structures and creation input types (`src/modules/certificate/types/index.ts`).
+- Certificate module storage logic (`src/modules/certificate/storage/certificateStore.ts`) implementing database CRUD operations (`getAll`, `getById`, `add`, `replace`, `delete`) using Dexie.js.
+- Certificate validation logic (`src/modules/certificate/validators/validateCertificate.ts`) verifying file size (max 15MB), format types (PDF, PNG, JPG, JPEG, WEBP), duplicate uploads, and corrupted image/PDF check routines.
+- Certificate constants configuration (`src/modules/certificate/constants/index.ts`) declaring size thresholds and allowed MIME type parameters.
+- Certificate business coordinator service (`src/modules/certificate/services/certificateService.ts`) executing validation checks before processing storage mutation requests.
+- Certificate state hook (`src/modules/certificate/hooks/useCertificate.ts`) enabling reactive subscription to changes on IndexedDB stores.
+- Certificate module UI components: card renderer (`CertificateCard.tsx`), reactive list loader (`CertificateList.tsx`), and coordination view container (`CertificateView.tsx`).
+- Certificate index barrel exports file (`index.ts`).
+- Cart module types mapping the database schema structures and input models (`src/modules/cart/types/index.ts`).
+- Cart module storage logic (`src/modules/cart/storage/cartStore.ts`) implementing Dexie.js CRUD operations sorted by creation timestamp descending.
+- Cart validation rules (`src/modules/cart/validators/validateCart.ts`) checking title character bounds, protocol matches, spaces, and duplicate listings.
+- Cart business query service (`src/modules/cart/services/cartService.ts`) coordinating database actions.
+- Cart module custom hook (`src/modules/cart/hooks/useCart.ts`) providing reactive state arrays and modification handlers.
+- Cart module UI display components: card renderer (`CartCard.tsx`), form modal (`CartFormModal.tsx`), list grid layout (`CartList.tsx`), and coordination view wrapper (`CartView.tsx`).
+- Cart index exports barrel configuration (`index.ts`).
+- Background Chrome message handler for the Cart module (`src/background/handlers/cartHandler.ts`) processing `CART_ADD_CURRENT_PAGE` and `CART_DELETE` transactions.
+- Content script initialization entry point (`src/content/index.ts`) listening to background chrome events.
+- Injected Floating Button component (`src/content/components/FloatingButton.ts`) capturing title and URL metadata and executing background message transmissions.
+- Injected Toast overlay component (`src/content/components/Toast.ts`) displaying success and error status feedback alerts.
+- Settings module types mapping user settings preferences and themes (`src/modules/settings/types/index.ts`).
+- Settings storage actions layer (`src/modules/settings/storage/settingsStore.ts`) wrapping chrome.storage.local key-value queries.
+- Global context provider (`src/modules/settings/providers/SettingsProvider.tsx`) capturing settings modifications, synchronizing root theme classes, and broadcasting tab messaging toggles.
+- Custom state hook (`src/modules/settings/hooks/useSettings.ts`) referencing preferences options.
+- Main Settings container layout component (`src/modules/settings/components/SettingsPage.tsx`) displaying config sections and managing reactive selection triggers.
+- API key input field layout subcomponent (`src/modules/settings/components/ApiKeyInput.tsx`) handling input visibility switches and update updates.
+- Theme selector grid layout subcomponent (`src/modules/settings/components/ThemeSelector.tsx`) handling immediate theme modifications.
+- Floating button toggle control subcomponent (`src/modules/settings/components/FloatingButtonToggle.tsx`) connecting UI check triggers with settings hook modifiers.
+- Database clearing panel component (`src/modules/settings/components/ClearDataButton.tsx`) running transactions to wipe IndexedDB tables.
+- Information section component (`src/modules/settings/components/AboutSection.tsx`) rendering tutorials and metadata fields.
+- Settings barrel index exports wrapper (`index.ts`).
+
+### Changed
+- Synchronized and updated naming conventions rules in `Folder_Structure.md` to reflect PascalCase for React component files, camelCase for helper scripts, and `use*.ts` hook files.
+- Synchronized project memory in `Memory.md` by pruning duplicated roadmap items and maintaining long-term product context.
+- Configured background service worker entry point `src/background/index.ts` to listen to runtime events and route Cart message tasks, and registered storage change watchers to transmit visibility messages reactively to content scripts on target web pages.
+- Modified manifest file `public/manifest.json` specifying document_idle script loading rules.
+- Modified content script index entry `src/content/index.ts` to manage loading toggles, listen to storage updates reactively, map message triggers, and dynamically display Toast status feedback.
+- Mounted `CertificateView` and `CartView` inside the active tab route switcher inside `src/app/App.tsx` and removed their respective unimplemented layout placeholders.
+
 ## [1.0.0-alpha.1] - 2026-07-15
 ### Added
 - Complete MV3 Chrome Extension folder structure matching design boundaries.

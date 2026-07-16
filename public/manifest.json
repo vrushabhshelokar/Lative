@@ -20,7 +20,8 @@
   "content_scripts": [
     {
       "js": ["src/content/index.ts"],
-      "matches": ["http://*/*", "https://*/*"]
+      "matches": ["http://*/*", "https://*/*"],
+      "run_at": "document_idle"
     }
   ],
   "permissions": [

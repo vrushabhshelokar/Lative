@@ -557,6 +557,22 @@ Phase 1 Completed
 
 Do not begin Phase 2 until explicitly instructed.
 
+## Completion Verification
+
+Before marking the task as completed:
+
+1. Compare the implementation against:
+   - Product_Requirements_Document.md
+   - Features.md
+   - Current roadmap task
+
+2. Verify every requirement of the current task is implemented.
+
+3. If any requirement is missing:
+   - Do NOT mark the task complete.
+   - Report the missing items.
+   - Continue implementing until the Definition of Done is fully satisfied.
+
 # Final Checklist
 
 Before considering the feature complete, verify:

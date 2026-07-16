@@ -286,3 +286,153 @@
   - Refactored validation script `src/modules/resume/validators/validateResume.ts` to execute a dry-run load using `pdfjs.getDocument`.
   - Blocked password-protected or empty documents immediately during validation.
   - Simplified text extractor `src/modules/resume/parser/textExtractor.ts` to skip duplicate verification since readability is pre-verified.
+
+## P6-T1: Certificate Database Setup
+- **Date**: 2026-07-16
+- **Summary**: Implemented IndexedDB CRUD transactional storage methods for the Certificate module.
+- **Details**:
+  - Created type interface `src/modules/certificate/types/index.ts` mapping the Certificate DB structure and CreateCertificateInput values.
+  - Created storage actions helper `src/modules/certificate/storage/certificateStore.ts` wrapping Dexie CRUD operations (`getAll`, `getById`, `add`, `replace`, `delete`).
+  - Verified storage reads/writes of binary Blob data structures on the certificates database table index.
+
+## P6-T2: Certificate Validation Logic
+- **Date**: 2026-07-16
+- **Summary**: Implemented validation logic for uploaded certificates including file size, format checks, duplicate checks, and file integrity check routines.
+- **Details**:
+  - Created constants configuration `src/modules/certificate/constants/index.ts` declaring `MAX_CERTIFICATE_SIZE` (15MB) and `ALLOWED_CERTIFICATE_TYPES` (PDF, PNG, JPG, JPEG, WEBP).
+  - Developed validator utility `src/modules/certificate/validators/validateCertificate.ts` checking file presence, file size, mime types, and duplicate files matching name and size indices.
+  - Added dry-run loading integrity check using pdf.js to reject corrupted/empty/password-locked PDFs, and image bitmaps check using `createImageBitmap` API to reject corrupted images.
+
+## P6-T3: Certificate Storage Services
+- **Date**: 2026-07-16
+- **Summary**: Implemented reactive data access services and state management hook for Certificate module transactions.
+- **Details**:
+  - Created business coordinator service `src/modules/certificate/services/certificateService.ts` running validation audits before processing upload, replace, and delete actions.
+  - Created reactive custom state hook `src/modules/certificate/hooks/useCertificate.ts` subscribing to Dexie IndexedDB changes using `useLiveQuery` to manage loading flags, errors, and store mutation callbacks.
+
+## P6-T4: Certificate UI List Views
+- **Date**: 2026-07-16
+- **Summary**: Developed visual list, card layout, and barrel exports index for the Certificate module.
+- **Details**:
+  - Created card renderer `src/modules/certificate/components/CertificateCard.tsx` formatting filenames, sizes, and upload dates, and rendering action buttons.
+  - Created list view `src/modules/certificate/components/CertificateList.tsx` rendering skeleton loaders, empty illustration states, and scrollable grids.
+  - Created view container wrapper `src/modules/certificate/components/CertificateView.tsx` managing delete confirmation modals.
+  - Set up barrel exports wrapper [src/modules/certificate/index.ts](file:///d:/workspace/lative/src/modules/certificate/index.ts).
+
+## P6-T5: Certificate Operations Trigger
+- **Date**: 2026-07-16
+- **Summary**: Mounted CertificateView and wired all actions (open, replace, copy, delete confirmations) to the active tab router.
+- **Details**:
+  - Mounted [CertificateView](file:///d:/workspace/lative/src/modules/certificate/components/CertificateView.tsx) component under `'certificate'` switch case inside [src/app/App.tsx](file:///d:/workspace/lative/src/app/App.tsx).
+  - Verified document viewing actions (using object URLs with revocation hooks), Clipboard copy-filenames triggers, file replacement mutations, and delete overlays function end-to-end.
+
+## P7-T1: Cart Storage Methods
+- **Date**: 2026-07-16
+- **Summary**: Implemented IndexedDB storage and CRUD queries for the Cart module.
+- **Details**:
+  - Created type interfaces `src/modules/cart/types/index.ts` mapping the Cart database structure (`CartItem`) and manual update/create inputs.
+  - Created storage actions helper `src/modules/cart/storage/cartStore.ts` wrapping Dexie CRUD operations (`getAll`, `getById`, `getByUrl`, `add`, `update`, `delete`) to manage bookmarked job pages.
+  - Configured `getAll` queries to return items sorted by `createdAt` in descending order, ensuring users see their newest bookmarks first.
+
+## P7-T2: Manual Cart View UI
+- **Date**: 2026-07-16
+- **Summary**: Built manual Add/Edit modals, confirm dialog overlays, and card lists display for the Cart module.
+- **Details**:
+  - Developed validator utility `src/modules/cart/validators/validateCart.ts` checking URL structure schemes, whitespace, and duplication parameters.
+  - Developed business service coordinator `src/modules/cart/services/cartService.ts` running validations on database operations.
+  - Developed state management hook `src/modules/cart/hooks/useCart.ts` reactively subscribing to database changes via `useLiveQuery`.
+  - Created components `CartCard.tsx` (open page, copy URL, edit, delete actions), `CartFormModal.tsx` (Add/Edit modal), `CartList.tsx` (renders grids, skeletons, empty states), and `CartView.tsx` (coordinates confirmation dialogs).
+  - Mounted [CartView](file:///d:/workspace/lative/src/modules/cart/components/CartView.tsx) inside the active tab route switch switcher in [src/app/App.tsx](file:///d:/workspace/lative/src/app/App.tsx).
+
+## P7-T3: Message Handlers Registration
+- **Date**: 2026-07-16
+- **Summary**: Registered background service worker listeners handling Cart-specific messages.
+- **Details**:
+  - Created message handler file `src/background/handlers/cartHandler.ts` routing payload validations and IndexedDB write/delete mutations.
+  - Modified service worker entry point [src/background/index.ts](file:///d:/workspace/lative/src/background/index.ts) implementing message type filters for `CART_ADD_CURRENT_PAGE` and `CART_DELETE` and handling async responses with chrome message channels.
+
+## P7-T4: Content Script Injector
+- **Date**: 2026-07-16
+- **Summary**: Set up the extension's static content scripts loading parameters and event listener initialization.
+- **Details**:
+  - Configured matching patterns in [public/manifest.json](file:///d:/workspace/lative/public/manifest.json) under `content_scripts` to bundle `src/content/index.ts` and run it at `document_idle`.
+  - Built content script initialization entry point [src/content/index.ts](file:///d:/workspace/lative/src/content/index.ts) mapping message listeners using `chrome.runtime.onMessage.addListener`.
+
+## P7-T5: Page Details Capture & Save
+- **Date**: 2026-07-16
+- **Summary**: Developed floating save button capturing page metadata and executing storage transactions.
+- **Details**:
+  - Created class component [src/content/components/FloatingButton.ts](file:///d:/workspace/lative/src/content/components/FloatingButton.ts) building vanilla DOM elements with style overlays to avoid host conflicts. Clicking captures `document.title` and `window.location.href` and triggers background dispatch message queries.
+  - Linked entry point [src/content/index.ts](file:///d:/workspace/lative/src/content/index.ts) checking storage flags for active toggles, and listening to runtime storage adjustments reactively.
+
+## P7-T6: Page Feedback Notification Toast
+- **Date**: 2026-07-16
+- **Summary**: Built floating notification toasts displaying save task success/failure statuses.
+- **Details**:
+  - Created class component [src/content/components/Toast.ts](file:///d:/workspace/lative/src/content/components/Toast.ts) rendering vanilla DOM overlay alerts with success/error SVG indicators, slide-in transitions, and 3-second auto-dismiss intervals.
+  - Modified [src/content/index.ts](file:///d:/workspace/lative/src/content/index.ts) to intercept floating save events and route `TOAST_SHOW` background queries, dynamically displaying page status feedback.
+
+## P8-T1: Local Settings Store
+- **Date**: 2026-07-16
+- **Summary**: Configured local user preferences storage layer via chrome.storage.local APIs.
+- **Details**:
+  - Created settings interface type definitions `src/modules/settings/types/index.ts` declaring `AppSettings` properties (`geminiApiKey`, `theme`, `floatingButtonEnabled`) and `ThemeType`.
+  - Built storage queries wrapper `src/modules/settings/storage/settingsStore.ts` using `safeStorage` helper queries to read/write settings.
+  - Exported settings module exports in barrel index file `src/modules/settings/index.ts`.
+
+## P8-T2: Local Preferences Controller Hook
+- **Date**: 2026-07-16
+- **Summary**: Implemented React SettingsProvider and useSettings hook reactively tracking and broadcasting local extension settings configurations.
+- **Details**:
+  - Built context wrapper [src/modules/settings/providers/SettingsProvider.tsx](file:///d:/workspace/lative/src/modules/settings/providers/SettingsProvider.tsx) initializing and monitoring theme shifts, key additions, and floating button toggles. Binds storage listener actions and queries.
+  - Implemented event emitter in `SettingsProvider.tsx` executing `chrome.tabs.sendMessage` broadcasts on button updates, updating active web page frames immediately.
+  - Created custom hook [src/modules/settings/hooks/useSettings.ts](file:///d:/workspace/lative/src/modules/settings/hooks/useSettings.ts) exposing context parameters.
+
+## P8-T3: Settings Panel Layout
+- **Date**: 2026-07-16
+- **Summary**: Created the main layout component container of the Settings panel listing active preferences configurations.
+- **Details**:
+  - Built layout component [src/modules/settings/components/SettingsPage.tsx](file:///d:/workspace/lative/src/modules/settings/components/SettingsPage.tsx) which lists layout blocks for Gemini API configuration, layout options for appearance themes, cart features toggles, backup restoration references, and about sections.
+  - Set up reactive theme select options switching options on select by binding state variables to context update methods.
+  - Linked new layout exports inside settings barrel [src/modules/settings/index.ts](file:///d:/workspace/lative/src/modules/settings/index.ts).
+
+## P8-T4: Gemini Key & Theme Configuration
+- **Date**: 2026-07-16
+- **Summary**: Created ApiKeyInput and ThemeSelector subcomponents reactively updating preferences storage.
+- **Details**:
+  - Developed [src/modules/settings/components/ApiKeyInput.tsx](file:///d:/workspace/lative/src/modules/settings/components/ApiKeyInput.tsx) containing input masks, status feedback, and update triggers.
+  - Developed [src/modules/settings/components/ThemeSelector.tsx](file:///d:/workspace/lative/src/modules/settings/components/ThemeSelector.tsx) allowing users to switch themes immediately.
+  - Integrated subcomponents inside [src/modules/settings/components/SettingsPage.tsx](file:///d:/workspace/lative/src/modules/settings/components/SettingsPage.tsx).
+
+## P8-T5: Floating Save Button Toggle
+- **Date**: 2026-07-16
+- **Summary**: Implemented the floating save button toggle component and background onChanged listener broadcasting tab visibility triggers instantly.
+- **Details**:
+  - Developed [src/modules/settings/components/FloatingButtonToggle.tsx](file:///d:/workspace/lative/src/modules/settings/components/FloatingButtonToggle.tsx) rendering switches to toggle settings configs.
+  - Modified [src/background/index.ts](file:///d:/workspace/lative/src/background/index.ts) registering `chrome.storage.onChanged` listener executing query tab broadcasts to send message events without page reloads.
+  - Integrated toggle selector inside settings layout [src/modules/settings/components/SettingsPage.tsx](file:///d:/workspace/lative/src/modules/settings/components/SettingsPage.tsx).
+
+## P8-T6: Metadata Views & Database Clear
+- **Date**: 2026-07-16
+- **Summary**: Created ClearDataButton and AboutSection subcomponents allowing user data deletion and extension version metadata views.
+- **Details**:
+  - Developed [src/modules/settings/components/ClearDataButton.tsx](file:///d:/workspace/lative/src/modules/settings/components/ClearDataButton.tsx) running write actions to clear IndexedDB collections, flush preferences, and reload active popup frames.
+  - Developed [src/modules/settings/components/AboutSection.tsx](file:///d:/workspace/lative/src/modules/settings/components/AboutSection.tsx) displaying extension version information, feedback resources, and links.
+  - Mounted new subcomponents inside [src/modules/settings/components/SettingsPage.tsx](file:///d:/workspace/lative/src/modules/settings/components/SettingsPage.tsx).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

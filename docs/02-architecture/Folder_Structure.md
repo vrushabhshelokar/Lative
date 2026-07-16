@@ -890,95 +890,35 @@ workflows/
 
 # Naming Conventions
 
-## Files
+## Files and React Components
 
-Use camelCase.
+Files are named based on their role and contents to maintain strict consistency across the codebase:
 
-Examples
+### React Components (PascalCase)
+All React component files use **PascalCase** matching the component name.
+- **Good Examples**: `ResumeCard.tsx`, `Button.tsx`, `ConfirmDialog.tsx`, `LinksList.tsx`
+- **Avoid**: `resumeCard.tsx`, `resume-card.tsx`, `Resume_card.tsx`
 
-```text
-resumeCard.tsx
+### Hooks (useCamelCase.ts)
+Custom React hook files use **camelCase** and must always start with the `use` prefix.
+- **Good Examples**: `useResume.ts`, `useTheme.ts`, `useToast.ts`, `useMails.ts`
+- **Avoid**: `ResumeHook.ts`, `use-resume.ts`
 
-uploadResume.ts
+### Services, Validators, and Utilities (camelCase)
+Helper scripts, business logic files, input validations, and pure utility functions use **camelCase**.
+- **Good Examples**: `resumeService.ts`, `validateResume.ts`, `textExtractor.ts`, `formatDate.ts`
+- **Avoid**: `ResumeService.ts`, `validate_resume.ts`
 
-themeProvider.tsx
-```
-
-Avoid
-
-```text
-Resume_card.tsx
-
-resume-card.tsx
-```
-
----
-
-## React Components
-
-Use PascalCase.
-
-Examples
-
-```text
-ResumeCard
-
-SettingsPage
-
-UploadButton
-```
-
----
-
-## Hooks
-
-Always start with
-
-```text
-use
-```
-
-Examples
-
-```text
-useResume()
-
-useTheme()
-
-useToast()
-```
-
----
-
-## Services
-
-Verb-based names.
-
-Examples
-
-```text
-uploadResume
-
-deleteResume
-
-replaceResume
-
-parseResume
-```
+### Configuration Files
+Root and directory configurations follow existing standards:
+- **Good Examples**: `tailwind.config.ts`, `postcss.config.js`, `tsconfig.json`, `eslint.config.js`, `vite.config.ts`, `manifest.json`
 
 ---
 
 ## Constants
 
-UPPER_SNAKE_CASE.
-
-Examples
-
-```text
-MAX_FILE_SIZE
-
-SUPPORTED_FILE_TYPES
-```
+Constants are written in **UPPER_SNAKE_CASE**.
+- **Good Examples**: `MAX_FILE_SIZE`, `SUPPORTED_FILE_TYPES`, `MAX_RESUME_SIZE`
 
 ---
 

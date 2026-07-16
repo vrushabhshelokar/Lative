@@ -1,68 +1,58 @@
-# Project Memory
+# Lative Project Memory
 
-## Current Development Status
-- **Active Phase**: Phase 5 — Resume Module (All tasks and fixes complete)
-- **Completed Tasks**: 
-  - [x] P0-T1: Project Initialization
-  - [x] P0-T2: TypeScript & Path Aliases Configuration
-  - [x] P0-T3: Tailwind CSS Setup & Theme Variables
-  - [x] P0-T4: Manifest V3 & CRXJS Configuration
-  - [x] P0-T5: ESLint & Prettier Setup
-  - [x] P0-T6: ThemeProvider Configuration
-  - [x] P0-T7: Popup Navigation Framework & Layout
-  - [x] P1-T1: Dexie.js Integration
-  - [x] P1-T2: Storage Schema Definition & TS Models
-  - [x] P1-T3: Schema Versioning & Migrations Setup
-  - [x] P1-T4: Create CRUD query utilities for DB tables
-  - [x] P2-T1: Style Design Tokens
-  - [x] P2-T2: Primitive Atom Elements
-  - [x] P2-T3: Component Card Layout
-  - [x] P2-T4: Modal and Confirmation overlays
-  - [x] P2-T5: Toast Notification System
-  - [x] P2-T6: Loading Shimmer Bars
-  - [x] P3-T1: Links Collection Storage Setup
-  - [x] P3-T2: Link Format Validation logic
-  - [x] P3-T3: Live Subscribers state hooks
-  - [x] P3-T4: Envelope Card UI components
-  - [x] P3-T5: Forms Modals components
-  - [x] P3-T6: Links routing tab integration
-  - [x] P4-T1: Mail Database storage CRUD
-  - [x] P4-T2: RFC compliance validation checking
-  - [x] P4-T3: Live subscriber hooks
-  - [x] P4-T4: UI Card list layout components
-  - [x] P4-T5: Form components and Mail tab routing
-  - [x] P5-T1: Resume Database storage config
-  - [x] P5-T2: PDF.js Worker loader
-  - [x] P5-T3: PDF Validation scripts
-  - [x] P5-T4: PDF Raw text extractor script
-  - [x] P5-T5: Heuristic section categorizer
-  - [x] P5-T6: Upload drag and drop elements
-  - [x] P5-T7: Coordinator parsing hooks
-  - [x] P5-T8: Card gallery lists UI
-  - [x] P5-T9: Open, Replace, & Delete Handlers
-  - [x] P5-F1: Copy Filename Action
-  - [x] P5-F2: PDF Readability & Password Checks in Validator
-- **Active Task**: None (Phases 1-5 and all approved Phase 5 fixes are fully implemented)
+This document serves as the long-term context store for Lative. It maintains the current state of development, architectural constraints, and strategic decisions.
 
-## Current Architecture State
-- Extension directory structure initialized exactly matching `Folder_Structure.md`.
-- Workspace root files created: `package.json`, `README.md`, `.gitignore`, `postcss.config.js`, `tailwind.config.ts`, `tsconfig.json`, `vite.config.ts`, `eslint.config.js`, `prettier.config.js`.
-- Manifest V3 parameters defined in `public/manifest.json`.
-- Theme management context provider (`ThemeProvider.tsx`) and hooks (`useTheme.ts`) implemented.
-- Safe chrome storage library wrapper (`chrome.ts`) added.
-- Dexie.js library wrapper (`src/lib/dexie.ts`) and main database class instance initialization (`src/database/db.ts`) completed, including strongly-typed database table properties.
-- Storage schema store indices defined in `src/database/schema.ts` and type models created in `src/types/database.ts` representing resumes, parsedResumes, certificates, links, mails, cart, and settings.
-- Database versioning and schemas initialization migrations manager (`src/database/migrations.ts`) configured to register database stores version definitions.
-- Popup navigation shell layout (`AppLayout.tsx`, `App.tsx`, `routes.ts`) built matching design guidelines.
-- Database CRUD actions fully configured for Links, Mail, and Resumes collections.
-- Text extractor engines and parsing heuristics implemented page-by-page.
-- Drag-and-drop components, lists, cards, delete dialog confirmations, and copy-to-clipboard functionality added.
-- Project compiles, builds, and formats successfully without errors or warnings.
+---
 
-## Remaining Work (Phase 6 onwards)
-- P6-T1: Certificate Database Setup
-- P6-T2: Certificate Validation Logic
-- P6-T3: Certificate UI components
-- P6-T4: Certificate list layouts
-- P6-T5: Certificate replacement and delete actions
-- P6-T6: Certificate tab dashboard routing integration
+## 1. Product Vision
+
+Lative is a privacy-first, local-first browser extension designed to centralize and simplify the management of career assets (resumes, certificates, professional profile links, email addresses, and bookmarked career pages). It features an on-demand, resume-aware AI chat assistant powered by Google Gemini (using the user's own API key). 
+
+**Key Principle**: Users remain in complete control of their data. The extension intentionally avoids automatic form filling and cloud databases. All user-generated content resides entirely in the user's local browser vault.
+
+---
+
+## 2. Architecture Summary
+
+Lative follows a modular, feature-first architecture built on Chrome Extension Manifest V3:
+- **Module Isolation**: Each capability (Links, Mail, Resume, etc.) resides in its own module directory under `src/modules/` and encapsulates its own UI components, business logic, storage actions, validators, hooks, and types.
+- **Communication Flow (Hub-and-Spoke)**: The background service worker serves as the communication hub. The popup UI never interacts directly with content scripts or web page DOMs; all messages route through the background script. Content scripts never access IndexedDB directly.
+- **Storage Layer**: Primary data (documents, blobs, links) is stored in IndexedDB via Dexie.js. Lightweight configurations (themes, API keys, active tabs) are stored in `chrome.storage.local`.
+- **AI Execution**: AI context and requests are handled in the Popup context. Chat history is transient and exists only during the active session.
+
+---
+
+## 3. Technology Stack
+
+- **Core**: React, TypeScript, Vite, Chrome Extension MV3, CRXJS (Vite plugin).
+- **Styling**: Tailwind CSS, CSS Variables.
+- **Storage**: IndexedDB (Dexie.js), `chrome.storage.local`.
+- **Libraries**: `pdfjs-dist` (for PDF text extraction), Framer Motion (animations), Lucide React (icons).
+- **AI Service**: Google Gemini API (via user-supplied API key).
+
+---
+
+## 4. Current Development Status
+
+The project is developed incrementally in phases. Refer to [implementation_roadmap.md](file:///d:/workspace/lative/docs/05-planning/implementation_roadmap.md) for the complete list of tasks and [Completed.md](file:///d:/workspace/lative/docs/06-memory/Completed.md) for the detailed summaries of completed tasks.
+
+- **Completed Phases**:
+  - **Phase 0 — Project Foundation**: Toolchain, styling system, MV3 setup, shell layout.
+  - **Phase 1 — Database Foundation**: Dexie.js initialization, schemas, and migrations.
+  - **Phase 2 — Shared UI System**: Reusable buttons, inputs, card primitives, dialogs, empty states, and toast notifications.
+  - **Phase 3 — Links Module**: Storage, validators, hooks, and UI list/forms for profile links.
+  - **Phase 4 — Mail Module**: Storage, RFC validation, live hooks, and UI card listings for email addresses.
+  - **Phase 5 — Resume Module**: Blob storage, PDF.js parsing, section categorization heuristics, drag-and-drop uploads, copy-filename actions, and password-lock validator checks.
+- **Current Phase**: Phase 6 — Certificate Module
+- **Current Task**: [P6-T1: Certificate Database Setup](file:///d:/workspace/lative/docs/05-planning/Current_Task.md) (Pending)
+
+---
+
+## 5. Important Architectural Decisions
+
+For a full list of decisions, refer to [Decisions.md](file:///d:/workspace/lative/docs/06-memory/Decisions.md). Key constraints include:
+- **No Cloud Backend**: No accounts, authentication, or remote databases.
+- **Popup-Centric Gemini API Requests**: Outgoing AI requests are kept in the Popup context rather than background service worker contexts to reduce messaging complexity.
+- **Local PDF Parsing**: Resumes are parsed exactly once during upload; the raw text and heuristic structured data are saved locally. No repeated PDF parsing.
+- **Versioned Backups**: All backup exports exclude the Gemini API key and include metadata fields (`schemaVersion`, `appVersion`, `exportedAt`) for backward/forward compatibility checks.
+- **PascalCase Components**: All React components are stored in PascalCase-named files (e.g. `Button.tsx`), while non-component helper files use camelCase.
