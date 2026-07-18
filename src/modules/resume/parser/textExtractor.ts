@@ -1,4 +1,4 @@
-import { pdfjs } from '@/lib/pdf';
+import { getPdfJs } from '@/lib/pdf';
 
 /**
  * Extracts all raw text characters page-by-page from a pre-validated PDF document.
@@ -7,6 +7,7 @@ import { pdfjs } from '@/lib/pdf';
 export const extractRawText = async (file: Blob): Promise<string> => {
   try {
     const arrayBuffer = await file.arrayBuffer();
+    const pdfjs = await getPdfJs();
     
     const pdf = await pdfjs.getDocument({
       data: new Uint8Array(arrayBuffer),

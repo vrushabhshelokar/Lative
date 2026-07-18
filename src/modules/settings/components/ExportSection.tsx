@@ -57,10 +57,10 @@ export const ExportSection: React.FC = () => {
           size="sm"
           onClick={handleExport}
           isLoading={isExporting}
-          className="w-full flex items-center justify-center gap-1.5 font-medium text-xs py-2"
+          leftIcon={<Download className="w-3.5 h-3.5" />}
+          className="w-full"
         >
-          <Download className="w-3.5 h-3.5" />
-          <span>Export Backup (.lative)</span>
+          Export Backup (.lative)
         </Button>
       </div>
     </div>

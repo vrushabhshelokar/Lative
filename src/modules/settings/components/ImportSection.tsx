@@ -88,10 +88,10 @@ export const ImportSection: React.FC = () => {
           variant="secondary"
           size="sm"
           onClick={() => fileInputRef.current?.click()}
-          className="w-full flex items-center justify-center gap-1.5 font-medium text-xs py-2"
+          leftIcon={<Upload className="w-3.5 h-3.5" />}
+          className="w-full"
         >
-          <Upload className="w-3.5 h-3.5" />
-          <span>Upload Backup File</span>
+          Upload Backup File
         </Button>
       </div>
 

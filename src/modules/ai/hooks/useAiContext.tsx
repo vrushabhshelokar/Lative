@@ -8,6 +8,8 @@ export interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: number;
+  errorType?: 'quota' | 'key' | 'network' | 'generic';
+  rawPrompt?: string;
 }
 
 export interface AiContextType {

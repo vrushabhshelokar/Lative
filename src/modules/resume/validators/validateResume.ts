@@ -1,4 +1,4 @@
-import { pdfjs } from '@/lib/pdf';
+import { getPdfJs } from '@/lib/pdf';
 import { Resume } from '../types';
 import { MAX_RESUME_SIZE, ALLOWED_RESUME_TYPES } from '../constants';
 
@@ -71,6 +71,7 @@ export const validateResumeFile = async (
 
   // 5. PDF Readability and password-protection checking
   try {
+    const pdfjs = await getPdfJs();
     const loadingTask = pdfjs.getDocument({
       data: new Uint8Array(arrayBuffer),
       disableRange: true,

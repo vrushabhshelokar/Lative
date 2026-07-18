@@ -50,6 +50,14 @@ export const AiPanel: React.FC = () => {
         <ResumeSelector />
       </div>
 
+      {/* Beta Notice */}
+      <div className="shrink-0 px-3 py-1.5 bg-accent/[0.04] border border-accent/10 dark:border-accent/15 rounded-medium flex items-start gap-2.5 text-left">
+        <span className="text-[10.5px] font-bold text-accent shrink-0 uppercase tracking-wider mt-0.5">Beta</span>
+        <span className="text-[10.5px] text-text-secondary leading-normal">
+          AI responses may occasionally be inaccurate. Please verify important information.
+        </span>
+      </div>
+
       {/* Chat Conversation Scroll Area */}
       <div className="flex-1 min-h-0 bg-background-secondary border border-border rounded-medium flex flex-col p-3.5">
         {hasNoResumes ? (

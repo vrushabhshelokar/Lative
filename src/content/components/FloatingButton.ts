@@ -18,15 +18,15 @@ export class FloatingButton {
       position: 'fixed',
       bottom: '24px',
       right: '24px',
-      width: '42px',
-      height: '42px',
-      borderRadius: '12px',
+      width: '40px',
+      height: '40px',
+      borderRadius: '10px',
       backgroundColor: 'rgba(10, 10, 12, 0.85)',
       backdropFilter: 'blur(12px) saturate(190%)',
       webkitBackdropFilter: 'blur(12px) saturate(190%)', // Safari support
       color: 'rgba(255, 255, 255, 0.85)',
       border: '1px solid rgba(255, 255, 255, 0.08)',
-      boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 8px 24px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.2)',
+      boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 16px rgba(94, 106, 210, 0.04), 0 8px 24px rgba(0, 0, 0, 0.35)',
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
@@ -38,7 +38,7 @@ export class FloatingButton {
 
     // Inline SVG ShoppingCart icon
     button.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
         <circle cx="8" cy="21" r="1"></circle>
         <circle cx="19" cy="21" r="1"></circle>
         <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
@@ -48,9 +48,9 @@ export class FloatingButton {
     button.addEventListener('mouseenter', () => {
       button.style.transform = 'translateY(-2px) scale(1.02)';
       button.style.backgroundColor = 'rgba(20, 20, 25, 0.9)';
-      button.style.borderColor = 'rgba(94, 106, 210, 0.4)';
+      button.style.borderColor = 'rgba(94, 106, 210, 0.45)';
       button.style.color = '#ffffff';
-      button.style.boxShadow = '0 0 0 1px rgba(94, 106, 210, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 12px 32px rgba(94, 106, 210, 0.2), 0 4px 12px rgba(0, 0, 0, 0.3)';
+      button.style.boxShadow = '0 0 0 1px rgba(94, 106, 210, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 24px rgba(94, 106, 210, 0.15), 0 12px 32px rgba(0, 0, 0, 0.45)';
     });
 
     button.addEventListener('mouseleave', () => {
@@ -58,21 +58,21 @@ export class FloatingButton {
       button.style.backgroundColor = 'rgba(10, 10, 12, 0.85)';
       button.style.borderColor = 'rgba(255, 255, 255, 0.08)';
       button.style.color = 'rgba(255, 255, 255, 0.85)';
-      button.style.boxShadow = '0 0 0 1px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 8px 24px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.2)';
+      button.style.boxShadow = '0 0 0 1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 16px rgba(94, 106, 210, 0.04), 0 8px 24px rgba(0, 0, 0, 0.35)';
     });
 
     button.addEventListener('mousedown', () => {
-      button.style.transform = 'translateY(0) scale(0.95)';
+      button.style.transform = 'translateY(0) scale(0.96)';
       button.style.backgroundColor = 'rgba(8, 8, 10, 0.95)';
       button.style.borderColor = 'rgba(94, 106, 210, 0.2)';
-      button.style.boxShadow = 'inset 0 1px 0 rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.4)';
+      button.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.4), inset 0 0 8px rgba(94, 106, 210, 0.05), 0 2px 4px rgba(0, 0, 0, 0.2)';
     });
 
     button.addEventListener('mouseup', () => {
       button.style.transform = 'translateY(-2px) scale(1.02)';
       button.style.backgroundColor = 'rgba(20, 20, 25, 0.9)';
-      button.style.borderColor = 'rgba(94, 106, 210, 0.4)';
-      button.style.boxShadow = '0 0 0 1px rgba(94, 106, 210, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 12px 32px rgba(94, 106, 210, 0.2), 0 4px 12px rgba(0, 0, 0, 0.3)';
+      button.style.borderColor = 'rgba(94, 106, 210, 0.45)';
+      button.style.boxShadow = '0 0 0 1px rgba(94, 106, 210, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 24px rgba(94, 106, 210, 0.15), 0 12px 32px rgba(0, 0, 0, 0.45)';
     });
 
     button.addEventListener('click', async () => {

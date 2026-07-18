@@ -41,14 +41,24 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 
       {/* Header */}
       <header className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card/75 dark:bg-card/40 backdrop-blur-md select-none z-10 relative shrink-0">
-        <div className="flex items-center gap-2">
-          <div className="w-5 h-5 rounded-md bg-accent flex items-center justify-center text-white font-semibold text-xs shadow-[0_0_8px_rgba(94,106,210,0.3)]">
-            L
-          </div>
-          <span className="font-bold text-sm tracking-tight">Lative</span>
-        </div>
-        <span className="text-[11px] font-medium text-text-secondary">v1.0.0</span>
-      </header>
+  <div className="flex items-center gap-2">
+    <img
+      src="/images/lative_logo.png"
+      alt="Lative"
+      className="w-7 h-7 object-contain"
+    />
+
+    <img
+      src="/images/lative.png"
+      alt="Lative"
+      className="h-5 object-contain"
+    />
+  </div>
+
+  <span className="text-[11px] font-medium text-text-secondary">
+    v1.0.0
+  </span>
+</header>
 
       {/* Segmented Top Navigation */}
       <nav className="px-2.5 py-1.5 bg-background-secondary/40 border-b border-border/40 flex justify-between gap-1 overflow-x-auto no-scrollbar select-none z-10 relative shrink-0">

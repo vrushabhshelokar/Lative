@@ -71,10 +71,10 @@ export const ClearDataButton: React.FC = () => {
           variant="danger"
           size="sm"
           onClick={() => setIsOpen(true)}
-          className="w-full flex items-center justify-center gap-1.5"
+          leftIcon={<Trash2 className="w-3.5 h-3.5" />}
+          className="w-full"
         >
-          <Trash2 className="w-3.5 h-3.5" />
-          <span>Clear All Data</span>
+          Clear All Data
         </Button>
       </div>
 

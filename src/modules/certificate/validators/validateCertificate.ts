@@ -1,4 +1,4 @@
-import { pdfjs } from '@/lib/pdf';
+import { getPdfJs } from '@/lib/pdf';
 import { Certificate } from '../types';
 import { MAX_CERTIFICATE_SIZE, ALLOWED_CERTIFICATE_TYPES } from '../constants';
 
@@ -52,6 +52,7 @@ export const validateCertificateFile = async (
   if (isPdf) {
     try {
       const arrayBuffer = await file.arrayBuffer();
+      const pdfjs = await getPdfJs();
       const loadingTask = pdfjs.getDocument({
         data: new Uint8Array(arrayBuffer),
         disableRange: true,

@@ -16,6 +16,12 @@
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
+  /* Standard scrollbar properties for Firefox compatibility */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border) / 0.4) transparent;
+  }
+
   /* Custom Scrollbar Styles conforming to scrollbar-thin parameters */
   ::-webkit-scrollbar {
     width: 5px;

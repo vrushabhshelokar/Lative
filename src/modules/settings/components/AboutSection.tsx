@@ -13,7 +13,7 @@ export const AboutSection: React.FC = () => {
 
         <div className="flex flex-col gap-2.5">
           <a
-            href="https://tally.so/r/lative-feedback"
+            href="https://tally.so/r/q4748d"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-between text-xs text-text-primary hover:text-accent font-medium py-0.5 group"
@@ -42,6 +42,18 @@ export const AboutSection: React.FC = () => {
         <span className="text-[10px] text-text-secondary/80 mt-0.5">
           Privacy-first local career manager
         </span>
+        <a 
+          href="https://github.com/vrushabhshelokar" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="hover:opacity-80 transition-opacity"
+        >
+          <div className="flex items-center gap-1.5 text-[11px] select-none font-bold uppercase tracking-wider"> 
+            <Info className="w-3.5 h-3.5" /> 
+            <span>Github</span> 
+          </div>
+        </a>
+
       </div>
     </>
   );

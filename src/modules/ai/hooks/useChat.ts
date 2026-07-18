@@ -98,11 +98,42 @@ export const useChat = () => {
       const error = err as Error;
       toast.error(error.message || 'Failed to complete query.');
       
+      // Classify the error type programmatically
+      let errorType: 'quota' | 'key' | 'network' | 'generic' = 'generic';
+      const msgLower = (error.message || '').toLowerCase();
+      if (
+        msgLower.includes('key') || 
+        msgLower.includes('api_key_invalid') || 
+        msgLower.includes('invalid') || 
+        msgLower.includes('unauthorized') || 
+        msgLower.includes('400') || 
+        msgLower.includes('403')
+      ) {
+        errorType = 'key';
+      } else if (
+        msgLower.includes('429') || 
+        msgLower.includes('quota') || 
+        msgLower.includes('exhausted') || 
+        msgLower.includes('rate limit')
+      ) {
+        errorType = 'quota';
+      } else if (
+        !navigator.onLine || 
+        msgLower.includes('fetch') || 
+        msgLower.includes('network') || 
+        msgLower.includes('internet') || 
+        msgLower.includes('offline')
+      ) {
+        errorType = 'network';
+      }
+
       const errorMsg: Message = {
         id: Math.random().toString(36).substring(7),
         role: 'assistant',
         content: `Error: ${error.message || 'AI content generation failed.'}`,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        errorType,
+        rawPrompt: trimmedPrompt
       };
       setMessages((prev) => [...prev, errorMsg]);
     } finally {

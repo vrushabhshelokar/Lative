@@ -32,6 +32,10 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ onActionClick, disab
   };
 
   const handleAnalyzePage = async () => {
+    if (typeof chrome === 'undefined' || !chrome.runtime || !chrome.runtime.sendMessage) {
+      toast.error('Page analysis is only available when running as a browser extension.');
+      return;
+    }
     try {
       chrome.runtime.sendMessage({ type: 'GET_ACTIVE_PAGE_TEXT' }, (response) => {
         if (chrome.runtime.lastError) {
