@@ -15,7 +15,12 @@ export const useChat = () => {
     setIsChatLoading(false);
   };
 
-  const sendMessage = async (text: string) => {
+  const sendMessage = async (
+    text: string,
+    promptOverride?: string,
+    requiredSectionsOverride?: ('fullText' | 'skills' | 'projects' | 'education' | 'experience' | 'achievements')[],
+    pageContent?: string
+  ) => {
     if (!text || !text.trim()) return;
 
     const trimmedPrompt = text.trim();
@@ -44,12 +49,30 @@ export const useChat = () => {
         throw new Error('Failed to retrieve the parsed resume content.');
       }
 
+      // Determine required resume sections context-awarely
+      let requiredSections = requiredSectionsOverride;
+
+      if (!requiredSections) {
+        requiredSections = ['skills', 'projects', 'education', 'experience', 'achievements'];
+        if (promptOverride) {
+          // Resume vs JD comparison tasks / Page Analysis → experience, skills, and projects
+          if (
+            promptOverride.includes('[JOB DESCRIPTION]') ||
+            promptOverride.includes('missing') ||
+            promptOverride.includes('Advisor') ||
+            promptOverride.includes('Analyze the visible text content')
+          ) {
+            requiredSections = ['experience', 'skills', 'projects'];
+          }
+        }
+      }
+
       // Build context
-      const rawContext = AIContextBuilder.buildContext(parsed);
+      const rawContext = AIContextBuilder.buildContext(parsed, pageContent, undefined, requiredSections);
 
       // Build instructions and user prompts
       const systemInstruction = PromptBuilder.formatSystemInstruction(rawContext);
-      const userPrompt = PromptBuilder.formatUserPrompt(trimmedPrompt);
+      const userPrompt = PromptBuilder.formatUserPrompt(promptOverride || trimmedPrompt);
 
       // Generate text with fallback support
       const aiResponse = await AIService.generateText({

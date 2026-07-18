@@ -1,19 +1,30 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { FileText } from 'lucide-react';
 import { useResume } from '../hooks/useResume';
+import { useUpload } from '../hooks/useUpload';
 import { ResumeCard } from './ResumeCard';
 import { UploadButton } from './UploadButton';
 import { Skeleton } from '@/shared/components/Skeleton';
+import { EmptyState } from '@/shared/components/EmptyState';
 
 export interface ResumeListProps {
   onDelete: (id: string) => void;
   onReplace: (id: string, file: File) => Promise<void>;
+  onUpdateTitle: (id: string, title?: string) => Promise<void>;
 }
 
 export const ResumeList: React.FC<ResumeListProps> = ({
   onDelete,
-  onReplace
+  onReplace,
+  onUpdateTitle
 }) => {
   const { resumes, isLoading } = useResume();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { isUploading, handleFileSelect } = useUpload();
+
+  const triggerUpload = () => {
+    fileInputRef.current?.click();
+  };
 
   if (isLoading) {
     return (
@@ -22,6 +33,29 @@ export const ResumeList: React.FC<ResumeListProps> = ({
         <div className="h-[1px] bg-border/40 my-1" />
         <Skeleton variant="text" width={120} height={14} className="mb-2" />
         <Skeleton variant="rect" height={60} />
+      </div>
+    );
+  }
+
+  if (resumes.length === 0) {
+    return (
+      <div className="h-full select-none font-sans">
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileSelect}
+          accept=".pdf"
+          className="hidden"
+          disabled={isUploading}
+        />
+        <EmptyState
+          title="No resumes saved"
+          description="Upload your resume in PDF format to let Lative's resume-aware AI assistant summarize your profile, verify missing skills, and analyze job suitability."
+          icon={FileText}
+          actionText="Upload Resume"
+          onAction={triggerUpload}
+          isLoading={isUploading}
+        />
       </div>
     );
   }
@@ -44,22 +78,16 @@ export const ResumeList: React.FC<ResumeListProps> = ({
 
       {/* Scrollable list */}
       <div className="flex-1 overflow-y-auto px-4 pb-4 flex flex-col gap-3 min-h-0">
-        {resumes.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-6 text-center select-none">
-            <span className="text-[11px] text-text-secondary">
-              No resumes uploaded yet. Upload a resume above to start.
-            </span>
-          </div>
-        ) : (
-          resumes.map((resume) => (
+        {resumes.map((resume, index) => (
+          <div key={resume.id} className={`animate-fade-in-up stagger-${Math.min(index + 1, 8)}`}>
             <ResumeCard
-              key={resume.id}
               resume={resume}
               onDelete={onDelete}
               onReplace={onReplace}
+              onUpdateTitle={onUpdateTitle}
             />
-          ))
-        )}
+          </div>
+        ))}
       </div>
     </div>
   );

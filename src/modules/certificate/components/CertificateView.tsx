@@ -3,9 +3,10 @@ import { CertificateList } from './CertificateList';
 import { ConfirmDialog } from '@/shared/components/ConfirmDialog';
 import { useCertificate } from '../hooks/useCertificate';
 import { useToast } from '@/shared/hooks/useToast';
+import { CertificateMetadata } from '../types';
 
 export const CertificateView: React.FC = () => {
-  const { deleteCertificate, replaceCertificate, uploadCertificate } = useCertificate();
+  const { deleteCertificate, replaceCertificate, uploadCertificate, updateCertificateMetadata } = useCertificate();
   const toast = useToast();
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -39,12 +40,17 @@ export const CertificateView: React.FC = () => {
     await uploadCertificate(file);
   };
 
+  const handleUpdateMetadata = async (id: string, metadata?: CertificateMetadata) => {
+    await updateCertificateMetadata(id, metadata);
+  };
+
   return (
     <div className="h-full flex flex-col min-h-0">
       <CertificateList
         onDelete={handleDeleteClick}
         onReplace={handleReplace}
         onUpload={handleUpload}
+        onUpdateMetadata={handleUpdateMetadata}
       />
 
       <ConfirmDialog

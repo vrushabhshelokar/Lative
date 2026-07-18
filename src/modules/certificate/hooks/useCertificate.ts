@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useState } from 'react';
 import { certificateService } from '../services/certificateService';
 import { certificateStore } from '../storage/certificateStore';
-import { Certificate } from '../types';
+import { Certificate, CertificateMetadata } from '../types';
 
 export interface UseCertificateResult {
   certificates: Certificate[];
@@ -11,6 +11,7 @@ export interface UseCertificateResult {
   uploadCertificate: (file: File) => Promise<string>;
   replaceCertificate: (id: string, file: File) => Promise<void>;
   deleteCertificate: (id: string) => Promise<void>;
+  updateCertificateMetadata: (id: string, metadata?: CertificateMetadata) => Promise<void>;
   clearError: () => void;
 }
 
@@ -61,6 +62,17 @@ export const useCertificate = (): UseCertificateResult => {
     }
   };
 
+  const updateCertificateMetadata = async (id: string, metadata?: CertificateMetadata): Promise<void> => {
+    try {
+      setError(null);
+      await certificateService.updateMetadata(id, metadata);
+    } catch (err) {
+      const errorObj = err as Error;
+      setError(errorObj);
+      throw errorObj;
+    }
+  };
+
   const clearError = () => {
     setError(null);
   };
@@ -72,6 +84,8 @@ export const useCertificate = (): UseCertificateResult => {
     uploadCertificate,
     replaceCertificate,
     deleteCertificate,
+    updateCertificateMetadata,
     clearError
   };
 };
+export default useCertificate;

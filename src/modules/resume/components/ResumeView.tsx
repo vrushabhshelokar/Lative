@@ -5,7 +5,7 @@ import { useResume } from '../hooks/useResume';
 import { useToast } from '@/shared/hooks/useToast';
 
 export const ResumeView: React.FC = () => {
-  const { deleteResume, replaceResume } = useResume();
+  const { deleteResume, replaceResume, updateResumeTitle } = useResume();
   const toast = useToast();
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -35,11 +35,16 @@ export const ResumeView: React.FC = () => {
     await replaceResume(id, file);
   };
 
+  const handleUpdateTitle = async (id: string, title?: string) => {
+    await updateResumeTitle(id, title);
+  };
+
   return (
     <div className="h-full flex flex-col min-h-0">
       <ResumeList
         onDelete={handleDeleteClick}
         onReplace={handleReplace}
+        onUpdateTitle={handleUpdateTitle}
       />
 
       <ConfirmDialog

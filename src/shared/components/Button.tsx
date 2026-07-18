@@ -53,10 +53,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Variant classes mapping
     const variantStyles = {
-      primary: 'bg-accent text-white hover:bg-accent-hover shadow-sm',
-      secondary: 'border border-border bg-card text-text-primary hover:bg-background-secondary hover:text-text-primary shadow-sm',
-      ghost: 'bg-transparent text-text-primary hover:bg-background-secondary',
-      danger: 'bg-danger text-white hover:bg-danger-hover shadow-sm'
+      primary: 'bg-accent text-white hover:bg-accent-hover shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15),0_2px_8px_rgba(94,106,210,0.25)] border border-accent/20',
+      secondary: 'bg-background-secondary/60 border border-border text-text-primary hover:bg-background-secondary/90 shadow-sm dark:bg-white/[0.05] dark:border-white/[0.08] dark:hover:bg-white/[0.08] dark:hover:border-white/[0.12]',
+      ghost: 'bg-transparent text-text-secondary hover:text-text-primary hover:bg-background-secondary/40 dark:hover:bg-white/[0.05]',
+      danger: 'bg-danger text-white hover:bg-danger-hover shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15),0_2px_8px_rgba(239,68,68,0.25)] border border-danger/20'
     };
 
     // Sizing classes mapping (padding, height, font, radius)

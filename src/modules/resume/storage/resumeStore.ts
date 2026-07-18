@@ -82,6 +82,14 @@ export const resumeStore = {
     });
   },
 
+  updateTitle: async (id: string, title?: string): Promise<void> => {
+    const now = Date.now();
+    await db.resumes.update(id, {
+      title: title?.trim() || undefined,
+      updatedAt: now
+    });
+  },
+
   delete: async (id: string): Promise<void> => {
     await db.transaction('rw', [db.resumes, db.parsedResumes], async () => {
       await db.resumes.delete(id);

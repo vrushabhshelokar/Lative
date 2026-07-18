@@ -5,8 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-alpha.3] - 2026-07-18
+### Added
+- Horizontal page reveal keyframes (`fade-in-up`) and stagger reveal utility classes (`stagger-1` through `stagger-8`) for visual layouts entry.
+- Custom cubic-bezier transition curves (`expo-out`) in tailwind utility configs.
+- Reusable onboarding standard layouts for `EmptyState` component displaying guided actions and desaturated icons.
+- Desaturated linear-gradient sweep animation properties (`animate-shimmer`) for theme skeleton views.
+- Centered overlay backdrop filters (`backdrop-blur-sm`) and focus-trap actions inside `Modal` layers.
+
+### Changed
+- Refactored `Toast` notification components to use theme-aware glass backdrops (`bg-card/95 dark:bg-[#0a0a0c]/90`) and custom outline border offsets (`border-border/60`, `border-danger/30`), adapting seamlessly to Light and Dark themes.
+- Redesigned the webpage floating action cart button (`FloatingButton.ts`) to be a premium dark-glass widget (`rgba(10, 10, 12, 0.85)` + saturation blur) with double shadow layers, inset highlights, and tactile scaling click states.
+- Configured scrollable card lists (`MailsList.tsx`, `LinksList.tsx`, `ResumeList.tsx`, `CertificateList.tsx`, `CartList.tsx`) to execute staggered reveals upon tab switches.
+- Restyled custom lists to use glass background gradients (`from-white/[0.06] to-white/[0.01]`), desaturated border lines, and `rounded-large` card shapes.
+- Wired keyboard outer focus rings (`focus:ring-offset-1 focus:ring-offset-background`) on input elements and clickable anchors for accessibility compliance.
+
 ## [1.0.0-alpha.2] - 2026-07-16
 ### Added
+- Backup serializer types (`src/modules/settings/types/backup.ts`), import schema validator (`src/modules/settings/validators/validateBackup.ts`), and serializer service (`src/modules/settings/services/backupService.ts`).
+- Backup exporter button (`src/modules/settings/components/ExportSection.tsx`) and restore validator button (`src/modules/settings/components/ImportSection.tsx`).
+- Resume title edit dialog (`src/modules/resume/components/ResumeTitleModal.tsx`) enabling users to assign custom tags to resumes.
+- Certificate metadata edit dialog (`src/modules/certificate/components/CertificateMetadataModal.tsx`) capturing optional details (organization, issue date, expiry date, credential ID, verification URL).
+- Page text context character truncation helper (`src/modules/ai/utils/tokenTrimmer.ts`) capping webpage inputs at 8000 characters.
+- Page Text Extractor script (`src/content/pageReader.ts`) parsing visible document inner text elements while ignoring stylesheets, scripts, header, and footer tags.
+- Job Description Comparison Modal component (`src/modules/ai/components/JdComparisonModal.tsx`) capturing and verifying target JDs.
+- QuickActions layout component (`src/modules/ai/components/QuickActions.tsx`) exposing Resume Summary and Profile Summary chips.
+- Modular prompt templates configuration (`src/modules/ai/prompts/templates.ts`) containing modular summaries and JD comparison prompts.
 - Certificate module types defining the database structures and creation input types (`src/modules/certificate/types/index.ts`).
 - Certificate module storage logic (`src/modules/certificate/storage/certificateStore.ts`) implementing database CRUD operations (`getAll`, `getById`, `add`, `replace`, `delete`) using Dexie.js.
 - Certificate validation logic (`src/modules/certificate/validators/validateCertificate.ts`) verifying file size (max 15MB), format types (PDF, PNG, JPG, JPEG, WEBP), duplicate uploads, and corrupted image/PDF check routines.
@@ -65,12 +89,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the settings module to define and store a structured `AIConfig` settings payload (containing provider, apiKey, selectedModel, availableModels, sdkVersion, and validatedAt parameters) in `chrome.storage.local`.
 - Introduced a provider-agnostic abstraction interface `AIProvider`, with a concrete `GeminiProvider` implementation isolating all Google-specific SDK operations (key validation, dynamic model discovery, text query generation, and model health diagnostics).
 - Introduced a central `ModelManager` service responsible for selecting preferred models according to prioritization rules and executing self-healing fallback operations.
-- Introduced `AIContextBuilder` and `PromptBuilder` services to gather input parameters (such as resume sections) and format them into plain-text query instructions, preventing hallucinations.
+- Introduced `AIContextBuilder` and `PromptBuilder` services to gather input parameters (such as resume sections, active page text contents, and pasted job descriptions) and format them into plain-text query instructions, preventing hallucinations.
+- Added support for missing skills evaluations and resume suitability advisor recommendations inside the main chat wrapper.
 - Created `ProviderFactory` to resolve and instantiate providers dynamically.
-- Refactored `ApiKeyInput` and `useChat` to utilize the new abstracted AI service boundaries.
+- Refactored `ApiKeyInput` and `useChat` to utilize the new abstracted AI service boundaries, with context-aware `requiredSections` calculation to prevent resume prompt context duplication.
+- Optimized `GeminiProvider` request pipeline to eliminate redundant GET and POST requests during API Key validation, reducing request count by 66%.
+- Refactored HTTP 429 status code handler in `GeminiProvider` to parse Retry-After headers and isolate rate limits from daily account quota exhaustion using SDK structured reason codes.
+- Configured background service worker message router (`src/background/index.ts`) to handle `GET_ACTIVE_PAGE_TEXT` queries and fetch visible text from the active tab.
+- Added the "Analyze Page" quick action button in `QuickActions.tsx`, triggering webpage context extraction and running matching comparisons.
 - Pruned deprecated legacy client/service files.
 - Modified content script index entry `src/content/index.ts` to manage loading toggles, listen to storage updates reactively, map message triggers, and dynamically display Toast status feedback.
 - Mounted `CertificateView` and `CartView` inside the active tab route switcher inside `src/app/App.tsx` and removed their respective unimplemented layout placeholders.
+- Extended the Certificate module files (types, store, service, hooks, list, and card) to support saving and viewing optional structured metadata (Title, Org, Dates, Credential ID, Verification Link), with copy functionality for Credential IDs.
+- Extended the global `CertificateRecord` database schema (`src/types/database.ts`) to add the optional `CertificateMetadata` object in a backwards-compatible manner.
+- Extended the Resume module files (store, service, hooks, list, and card) to support custom resume titles and updated the dropdown select option component.
+- Extended the global `ResumeRecord` database schema (`src/types/database.ts`) to support the optional `title` field.
+- Configured the main preferences dashboard (`src/modules/settings/components/SettingsPage.tsx`) and settings barrel index (`src/modules/settings/index.ts`) to mount the new backup and restore controllers.
 
 ## [1.0.0-alpha.1] - 2026-07-15
 ### Added

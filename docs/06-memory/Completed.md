@@ -497,6 +497,162 @@
   - Refactored `ApiKeyInput` and `useChat` hooks to leverage the newly designed AI Platform boundaries.
   - Pruned deprecated legacy client/service files.
 
+## P10-T1: Context Prompts Configuration
+- **Date**: 2026-07-16
+- **Summary**: Declared modular reusable prompt templates for summary and comparison operations, facilitating dynamic and structured AI requests.
+- **Details**:
+  - Created [src/modules/ai/prompts/templates.ts](file:///d:/workspace/lative/src/modules/ai/prompts/templates.ts) containing prompt templates for profile summaries, detailed resume summaries, JD comparisons, missing skills analysis, and resume suitability advisors.
+  - Registered prompt templates inside [src/modules/ai/index.ts](file:///d:/workspace/lative/src/modules/ai/index.ts) barrel exports wrapper.
+
+## P10-T2: Context Builder Pipeline
+- **Date**: 2026-07-16
+- **Summary**: Expanded the Context and Prompt builder components to consolidate webpage data and pasted job description text under structured templates.
+- **Details**:
+  - Modified [src/modules/ai/context/aiContextBuilder.ts](file:///d:/workspace/lative/src/modules/ai/context/aiContextBuilder.ts) to accept `jobDescription` parameters and return it as part of `RawAIContext`.
+  - Modified [src/modules/ai/services/promptBuilder.ts](file:///d:/workspace/lative/src/modules/ai/services/promptBuilder.ts) to parse page contents and job descriptions, formatting them into the unified system instructions parameter.
+
+## P10-T3: Resume Summarization Actions
+- **Date**: 2026-07-16
+- **Summary**: Connected the Resume Summary and Profile Summary quick action chips inside the empty chat container, utilizing prompt template parameterizations.
+- **Details**:
+  - Created [src/modules/ai/components/QuickActions.tsx](file:///d:/workspace/lative/src/modules/ai/components/QuickActions.tsx) rendering action buttons.
+  - Modified [src/modules/ai/components/ChatContainer.tsx](file:///d:/workspace/lative/src/modules/ai/components/ChatContainer.tsx) to render QuickActions when the session has no messages, passing down send handlers.
+  - Modified [src/modules/ai/components/AiPanel.tsx](file:///d:/workspace/lative/src/modules/ai/components/AiPanel.tsx) to mount ChatContainer passing hook callbacks.
+  - Modified [src/modules/ai/hooks/useChat.ts](file:///d:/workspace/lative/src/modules/ai/hooks/useChat.ts) to accept optional prompt overrides, preserving readable chat bubbles.
+  - Registered QuickActions in the index exports wrapper [src/modules/ai/index.ts](file:///d:/workspace/lative/src/modules/ai/index.ts).
+
+## P10-T4: Job Description Comparison
+- **Date**: 2026-07-16
+- **Summary**: Implemented the Job Description Comparison Modal, allowing users to paste a JD and run structured compatibility checks against their active resume.
+- **Details**:
+  - Created [src/modules/ai/components/JdComparisonModal.tsx](file:///d:/workspace/lative/src/modules/ai/components/JdComparisonModal.tsx) capturing pasted job descriptions.
+  - Modified [src/modules/ai/components/QuickActions.tsx](file:///d:/workspace/lative/src/modules/ai/components/QuickActions.tsx) to mount JdComparisonModal and render the "Compare Job Description" action button.
+  - Registered JdComparisonModal in the AI barrel exports [src/modules/ai/index.ts](file:///d:/workspace/lative/src/modules/ai/index.ts).
+
+## P10-T5: Missing Skills Analysis
+- **Date**: 2026-07-16
+- **Summary**: Implemented the Missing Skills Quick Action, reusing the Job Description Comparison modal framework to identify gap skillsets.
+- **Details**:
+  - Modified [src/modules/ai/components/JdComparisonModal.tsx](file:///d:/workspace/lative/src/modules/ai/components/JdComparisonModal.tsx) to accept an optional title prop, enabling dynamic labeling depending on the action mode.
+  - Modified [src/modules/ai/components/QuickActions.tsx](file:///d:/workspace/lative/src/modules/ai/components/QuickActions.tsx) to render a side-by-side layout (Compare JD and Missing Skills), routing inputs to `PROMPT_TEMPLATES.missingSkills(jdText)`.
+
+## P10-T6: Resume Selection Advisor
+- **Date**: 2026-07-16
+- **Summary**: Implemented the Resume Suitability Advisor Quick Action, evaluating the active resume qualifications against user-supplied JDs.
+- **Details**:
+  - Modified [src/modules/ai/components/QuickActions.tsx](file:///d:/workspace/lative/src/modules/ai/components/QuickActions.tsx) to render a full-width "Resume Suitability Advisor" action button below the comparison controls.
+  - Linked selection triggers to prompt advisor template queries: `PROMPT_TEMPLATES.resumeAdvisor(jdText)`.
+
+## AI-Request-Optimization: AI Platform Request Optimizations
+- **Date**: 2026-07-17
+- **Summary**: Optimized the AI request pipeline to reduce network overhead by 66% during API key validation, trimmed duplicate resume prompt context tokens, and resolved rate limit status diagnostics.
+- **Details**:
+  - Removed `healthCheck` invocations from `validateApiKey` inside [src/modules/ai/providers/GeminiProvider.ts](file:///d:/workspace/lative/src/modules/ai/providers/GeminiProvider.ts), validating keys using a single GET Models discovery call.
+  - Refactored `PromptBuilder` inside [src/modules/ai/services/promptBuilder.ts](file:///d:/workspace/lative/src/modules/ai/services/promptBuilder.ts) to be context-aware, filtering resume segments based on requested actions and omitting `fullText` unless requested.
+  - Configured [src/modules/ai/hooks/useChat.ts](file:///d:/workspace/lative/src/modules/ai/hooks/useChat.ts) to calculate and compile the optimal list of `requiredSections` dynamically based on prompt templates.
+  - Enhanced HTTP 429 status code handling in [src/modules/ai/providers/GeminiProvider.ts](file:///d:/workspace/lative/src/modules/ai/providers/GeminiProvider.ts) to distinguish rate limit and quota exhausts using structured SDK reason codes, with retry-after header parsing.
+
+## P11-T1: Page Text Extractor Script
+- **Date**: 2026-07-17
+- **Summary**: Implemented the Page Text Extractor Script to parse visible webpage text contents and added corresponding message listener routing in content script entries.
+- **Details**:
+  - Created [src/content/pageReader.ts](file:///d:/workspace/lative/src/content/pageReader.ts) filtering script, style, header, footer, nav, and aside elements, and cleaning whitespace.
+  - Modified [src/content/index.ts](file:///d:/workspace/lative/src/content/index.ts) to register the `EXTRACT_PAGE_TEXT` message handler inside the runtime listener.
+
+## P11-T2: Background Analysis Router
+- **Date**: 2026-07-17
+- **Summary**: Implemented the background page text extraction handler and registered message routing in background script entry points.
+- **Details**:
+  - Created [src/background/handlers/page.ts](file:///d:/workspace/lative/src/background/handlers/page.ts) implementing active tab querying and `EXTRACT_PAGE_TEXT` messaging triggers.
+  - Modified [src/background/index.ts](file:///d:/workspace/lative/src/background/index.ts) to register the `GET_ACTIVE_PAGE_TEXT` background handler in the message router.
+
+## P11-T3: Extraction Truncation Helpers
+- **Date**: 2026-07-17
+- **Summary**: Implemented character truncation helper keeping parsed webpage texts within token guidelines.
+- **Details**:
+  - Created [src/modules/ai/utils/tokenTrimmer.ts](file:///d:/workspace/lative/src/modules/ai/utils/tokenTrimmer.ts) limiting characters to 8000 (roughly 1500-2000 tokens) ending cleanly on word boundaries.
+  - Registered tokenTrimmer inside the AI module index barrel exports file [src/modules/ai/index.ts](file:///d:/workspace/lative/src/modules/ai/index.ts).
+
+## P11-T4: Page Analysis Action Button
+- **Date**: 2026-07-17
+- **Summary**: Connected the active webpage text extraction to the Analyze Page quick action button in the AI panel, passing context parameters cleanly.
+- **Details**:
+  - Modified [src/modules/ai/prompts/templates.ts](file:///d:/workspace/lative/src/modules/ai/prompts/templates.ts) to declare the `analyzePage` prompt template.
+  - Modified [src/modules/ai/hooks/useChat.ts](file:///d:/workspace/lative/src/modules/ai/hooks/useChat.ts) to accept optional `pageContent` and pass it to the context builder.
+  - Modified [src/modules/ai/components/ChatContainer.tsx](file:///d:/workspace/lative/src/modules/ai/components/ChatContainer.tsx) prop types to support pageContent parameters.
+  - Modified [src/modules/ai/components/QuickActions.tsx](file:///d:/workspace/lative/src/modules/ai/components/QuickActions.tsx) to render the "Analyze Page" button and trigger background text extraction before dispatching chat requests.
+
+## Certificate-Metadata: Certificate Metadata Enrichment
+- **Date**: 2026-07-17
+- **Summary**: Extended the Certificate module to store optional structured metadata (Title, Organization, Issue Date, Expiry Date, Credential ID, Verification URL) associated with each certificate file.
+- **Details**:
+  - Extended `CertificateRecord` database schema inside [src/types/database.ts](file:///d:/workspace/lative/src/types/database.ts) to support the optional `CertificateMetadata` type.
+  - Updated module types in [src/modules/certificate/types/index.ts](file:///d:/workspace/lative/src/modules/certificate/types/index.ts).
+  - Added `updateMetadata` store mutation to `certificateStore` in [src/modules/certificate/storage/certificateStore.ts](file:///d:/workspace/lative/src/modules/certificate/storage/certificateStore.ts).
+  - Added validation logic (matching url protocols and asserting expiry is after issue) to `certificateService` in [src/modules/certificate/services/certificateService.ts](file:///d:/workspace/lative/src/modules/certificate/services/certificateService.ts).
+  - Exposed `updateCertificateMetadata` in the `useCertificate` hook in [src/modules/certificate/hooks/useCertificate.ts](file:///d:/workspace/lative/src/modules/certificate/hooks/useCertificate.ts).
+  - Created [src/modules/certificate/components/CertificateMetadataModal.tsx](file:///d:/workspace/lative/src/modules/certificate/components/CertificateMetadataModal.tsx) to input and clear metadata.
+  - Refactored [src/modules/certificate/components/CertificateCard.tsx](file:///d:/workspace/lative/src/modules/certificate/components/CertificateCard.tsx) to render metadata details, trigger the editing modal, and copy Credential IDs to the clipboard.
+
+## Resume-Title: Resume Title Enrichment
+- **Date**: 2026-07-17
+- **Summary**: Extended the Resume module to store and display user-defined titles, matching Certificate module metadata details formatting patterns.
+- **Details**:
+  - Extended `ResumeRecord` database schema inside [src/types/database.ts](file:///d:/workspace/lative/src/types/database.ts) to support the optional `title?: string;` property.
+  - Added `updateTitle` store method to `resumeStore` in [src/modules/resume/storage/resumeStore.ts](file:///d:/workspace/lative/src/modules/resume/storage/resumeStore.ts).
+  - Added `updateResumeTitle` service method to `resumeService` in [src/modules/resume/services/resumeService.ts](file:///d:/workspace/lative/src/modules/resume/services/resumeService.ts).
+  - Exposed `updateResumeTitle` in the `useResume` hook in [src/modules/resume/hooks/useResume.ts](file:///d:/workspace/lative/src/modules/resume/hooks/useResume.ts).
+  - Created [src/modules/resume/components/ResumeTitleModal.tsx](file:///d:/workspace/lative/src/modules/resume/components/ResumeTitleModal.tsx) enabling users to assign, edit, and clear custom titles.
+  - Refactored [src/modules/resume/components/ResumeCard.tsx](file:///d:/workspace/lative/src/modules/resume/components/ResumeCard.tsx) to render the resume title as primary bold heading, falling back to the raw filename if undefined.
+  - Refactored [src/modules/ai/components/ResumeSelector.tsx](file:///d:/workspace/lative/src/modules/ai/components/ResumeSelector.tsx) dropdown selector options to prioritize display of the resume title instead of the raw filename.
+
+## Phase 12 — Backup & Restore
+- **Date**: 2026-07-17
+- **Summary**: Built the serialization formats, schema validators, backup exporters, and restore coordinator logic enabling full career asset data portability.
+- **Details**:
+  - Created [src/modules/settings/types/backup.ts](file:///d:/workspace/lative/src/modules/settings/types/backup.ts) declaring the `.lative` JSON schemas (mapping binary Blobs to Base64).
+  - Created [src/modules/settings/validators/validateBackup.ts](file:///d:/workspace/lative/src/modules/settings/validators/validateBackup.ts) performing strict type-safe structural, app header, and version checks on imported payloads.
+  - Created [src/modules/settings/services/backupService.ts](file:///d:/workspace/lative/src/modules/settings/services/backupService.ts) containing database table mapping routines, Base64 conversion helpers, settings filters (preserving existing API keys), and clear-and-bulkAdd transaction rollbacks.
+  - Created [src/modules/settings/components/ExportSection.tsx](file:///d:/workspace/lative/src/modules/settings/components/ExportSection.tsx) adding the download trigger generating custom `.lative` backup files.
+  - Created [src/modules/settings/components/ImportSection.tsx](file:///d:/workspace/lative/src/modules/settings/components/ImportSection.tsx) adding the upload file reader, overwrite verification warnings, and auto-reload setups.
+  - Modified [src/modules/settings/components/SettingsPage.tsx](file:///d:/workspace/lative/src/modules/settings/components/SettingsPage.tsx) to mount backup and restore controls.
+
+## Phase 13A — Visual Redesign & UX Polish
+- **Date**: 2026-07-18
+- **Summary**: Executed a comprehensive layout, theme, animation, and visual consistency redesign matching the Technical Dark Mode specifications.
+- **Details**:
+  - **P13-T1: UI Redesign Planning**: Created design documents mapping HSL color systems, focus offset borders, glass panels, horizontal shimmers, and staggered reveals.
+  - **P13-T2: Design Tokens & Global Theme**: Configured HSL style sheets (`variables.css`, `globals.css`) and extended Tailwind mapping (`tailwind.config.ts`) to lock colors, shadows, and spacing rules.
+  - **P13-T3: Shared UI Components Refactoring**: Redesigned Button, Input, Skeleton, Modal, and Card base modules to use the HSL design variables.
+  - **P13-T4: Navigation Polish**: Polished panel switches and optical alignment in header navigations.
+  - **P13-T5: Popup Layout & Viewport Anchoring**: Injected blurred background light-pool blobbing circles and set translucent backdrop filters.
+  - **P13-T6: Custom Glass Cards**: Rebuilt LinkCard, MailCard, ResumeCard, and CertificateCard to use glass borders and rounded-xl (12px) icon boxes.
+  - **P13-T7: Forms & Input Ring Outlines**: Applied custom outer offset focus rings to multi-line forms and custom select wrappers.
+  - **P13-T8: ButtonCTAs & Inset Glow Actions**: Refactored submit components with glowing inset layers.
+  - **P13-T9: Lists Stacking & Hover Border Highlights**: Uniformed card stack list spacing to 12px/14px.
+  - **P13-T10: Onboarding Empty States Standards**: Refactored EmptyState component to display desaturated Lucide icons inside 12px rounded-xl container grids and single, prominent guided onboarding CTA button triggers.
+  - **P13-T11: Loading Skeletons & Shimmer Timings**: Transformed skeleton loader blocks to use desaturated horizontal linear-gradient sweeping animations.
+  - **P13-T12: Bottom Translucent Overlay Toasts**: Refactored toast alerts into translucent bottom overlay containers (`bg-card/95 dark:bg-[#0a0a0c]/90` with desaturated alert intent outline borders).
+  - **P13-T13: Overlay Dialogs & Centered Modals**: Configured centered dialog modals to trap tab key focus and dim viewport layers.
+  - **P13-T14: Motion, Expo-Out & Staggered Reveals**: Integrated custom `expo-out` transition curves and staggered fade-in animations on active module tab switches.
+  - **P13-T15: Final UI Consistency & A11y Audit**: Audited popup container dimensions (strict 380px limit), accessibility focus borders, and theme switches.
+  - **UI Refinement Pass 01**: Refactored the toast notifications styling to be fully theme-aware in Light and Dark mode options.
+  - **UI Refinement Pass 02**: Replaced the content-script floating cart button with a highly premium dark glass widget (`rgba(10, 10, 12, 0.85)` + saturation blur) with double shadow layers, inset highlights, and tactile scaling click effects.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

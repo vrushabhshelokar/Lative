@@ -60,7 +60,7 @@ export const App: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="w-[400px] h-[600px] flex items-center justify-center bg-background text-text-secondary">
+      <div className="w-[380px] h-[600px] flex items-center justify-center bg-background text-text-secondary">
         <span className="text-xs">Loading Lative...</span>
       </div>
     );

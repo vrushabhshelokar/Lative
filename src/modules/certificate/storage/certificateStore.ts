@@ -1,5 +1,5 @@
 import { db } from '@/database/db';
-import { Certificate, CreateCertificateInput } from '../types';
+import { Certificate, CreateCertificateInput, CertificateMetadata } from '../types';
 
 export const certificateStore = {
   getAll: async (): Promise<Certificate[]> => {
@@ -39,6 +39,14 @@ export const certificateStore = {
       fileName: input.fileName.trim(),
       file: input.file,
       mimeType: input.mimeType,
+      updatedAt: now
+    });
+  },
+
+  updateMetadata: async (id: string, metadata?: CertificateMetadata): Promise<void> => {
+    const now = Date.now();
+    await db.certificates.update(id, {
+      metadata,
       updatedAt: now
     });
   },

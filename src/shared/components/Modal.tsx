@@ -87,7 +87,7 @@ export const Modal: React.FC<ModalProps> = ({
     >
       {/* Translucent Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/40 backdrop-blur-xs transition-opacity duration-200" 
+        className="absolute inset-0 bg-black/60 dark:bg-background-deep/70 backdrop-blur-sm transition-opacity duration-200" 
         onClick={onClose}
         aria-hidden="true"
       />
@@ -99,7 +99,7 @@ export const Modal: React.FC<ModalProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? 'modal-title' : undefined}
-        className={`relative w-full max-w-[360px] bg-card border border-border shadow-dialog rounded-card overflow-hidden p-5 flex flex-col gap-4 animate-scale-in focus:outline-none ${className}`}
+        className={`relative w-full max-w-[340px] bg-card border border-border dark:border-white/[0.08] shadow-dialog rounded-card overflow-hidden p-5 flex flex-col gap-4 animate-scale-in focus:outline-none ${className}`}
       >
         {/* Header Block */}
         {(title || showCloseButton) && (

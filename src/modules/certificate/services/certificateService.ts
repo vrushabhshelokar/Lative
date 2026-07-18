@@ -1,6 +1,6 @@
 import { certificateStore } from '../storage/certificateStore';
 import { validateCertificateFile } from '../validators/validateCertificate';
-import { Certificate } from '../types';
+import { Certificate, CertificateMetadata } from '../types';
 
 export class CertificateServiceError extends Error {
   constructor(message: string) {
@@ -61,7 +61,38 @@ export const certificateService = {
     });
   },
 
+  updateMetadata: async (id: string, metadata?: CertificateMetadata): Promise<void> => {
+    if (metadata) {
+      if (!metadata.title || !metadata.title.trim()) {
+        throw new CertificateServiceError('Certificate Title is required.');
+      }
+      if (metadata.verificationUrl && metadata.verificationUrl.trim()) {
+        const url = metadata.verificationUrl.trim();
+        if (!/^https?:\/\//i.test(url)) {
+          throw new CertificateServiceError('Verification URL must start with http:// or https://');
+        }
+      }
+
+      // Validate dates: Expiry Date must not be earlier than Issue Date
+      if (metadata.issueDate && metadata.issueDate.trim() && metadata.expiryDate && metadata.expiryDate.trim()) {
+        const issue = metadata.issueDate.trim();
+        const expiry = metadata.expiryDate.trim();
+
+        const issueVal = Date.parse(issue) || parseInt(issue, 10);
+        const expiryVal = Date.parse(expiry) || parseInt(expiry, 10);
+
+        if (!isNaN(issueVal) && !isNaN(expiryVal)) {
+          if (expiryVal < issueVal) {
+            throw new CertificateServiceError('Expiry Date cannot be earlier than Issue Date.');
+          }
+        }
+      }
+    }
+    await certificateStore.updateMetadata(id, metadata);
+  },
+
   deleteCertificate: async (id: string): Promise<void> => {
     await certificateStore.delete(id);
   }
 };
+export default certificateService;

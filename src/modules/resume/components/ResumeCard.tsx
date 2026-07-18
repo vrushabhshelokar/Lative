@@ -1,21 +1,25 @@
-import React, { useRef } from 'react';
-import { FileText, Eye, Copy, RefreshCw, Trash2 } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { FileText, Eye, Copy, RefreshCw, Trash2, Tag } from 'lucide-react';
 import { Resume } from '../types';
 import { useToast } from '@/shared/hooks/useToast';
+import { ResumeTitleModal } from './ResumeTitleModal';
 
 export interface ResumeCardProps {
   resume: Resume;
   onDelete: (id: string) => void;
   onReplace: (id: string, file: File) => Promise<void>;
+  onUpdateTitle: (id: string, title?: string) => Promise<void>;
 }
 
 export const ResumeCard: React.FC<ResumeCardProps> = ({
   resume,
   onDelete,
-  onReplace
+  onReplace,
+  onUpdateTitle
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const toast = useToast();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenPdf = () => {
     try {
@@ -68,8 +72,21 @@ export const ResumeCard: React.FC<ResumeCardProps> = ({
     }
   };
 
+  const handleTitleSubmit = async (newTitle?: string) => {
+    try {
+      await onUpdateTitle(resume.id, newTitle);
+      toast.success('Resume title updated.');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to update title.';
+      toast.error(msg);
+      throw err;
+    }
+  };
+
+  const hasTitle = !!resume.title;
+
   return (
-    <div className="flex items-center justify-between p-3.5 bg-card border border-border rounded-medium shadow-card hover:border-border/80 transition-all select-none font-sans group">
+    <div className="flex flex-col gap-2.5 p-3.5 bg-card dark:bg-gradient-to-b dark:from-white/[0.06] dark:to-white/[0.01] border border-border dark:border-white/[0.06] rounded-large shadow-card dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] hover:border-border/80 dark:hover:border-white/[0.12] transition-all select-none font-sans group">
       <input
         type="file"
         ref={fileInputRef}
@@ -78,31 +95,45 @@ export const ResumeCard: React.FC<ResumeCardProps> = ({
         className="hidden"
       />
 
-      <div className="flex items-center gap-3 min-w-0 flex-1">
-        {/* Rounded Icon Circle */}
-        <div className="w-8 h-8 rounded-full bg-background-secondary border border-border flex items-center justify-center text-text-secondary group-hover:text-accent transition-colors shrink-0">
-          <FileText className="w-4 h-4" />
+      {/* Rows Container */}
+      <div className="flex flex-col gap-1.5">
+        {/* Row 1: File icon + Title */}
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-7 h-7 rounded-lg bg-background-secondary/60 border border-border dark:bg-white/[0.04] dark:border-white/[0.08] flex items-center justify-center text-text-secondary group-hover:text-accent transition-colors shrink-0">
+            <FileText className="w-3.5 h-3.5" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h4
+              className="text-xs font-semibold text-text-primary truncate select-none leading-tight"
+              title={hasTitle ? resume.title : resume.fileName}
+            >
+              {hasTitle ? resume.title : resume.fileName}
+            </h4>
+          </div>
         </div>
 
-        {/* Filename, size, date */}
-        <div className="min-w-0 flex-1 flex flex-col gap-0.5">
-          <h4 className="text-xs font-semibold text-text-primary truncate select-none leading-none" title={resume.fileName}>
-            {resume.fileName}
-          </h4>
-          <div className="flex items-center gap-1.5 text-[10px] text-text-secondary select-none leading-normal mt-0.5">
-            <span>{formatBytes(resume.fileSize)}</span>
-            <span className="w-1 h-1 rounded-full bg-border/80" />
-            <span>Uploaded {formatDate(resume.uploadedAt)}</span>
-          </div>
+        {/* Row 2: Metadata (Size, Date, Original filename if applicable) */}
+        <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-text-secondary select-none leading-none pl-[38px] -mt-0.5">
+          <span>{formatBytes(resume.fileSize)}</span>
+          <span className="w-1 h-1 rounded-full bg-border/40" />
+          <span>Uploaded {formatDate(resume.uploadedAt)}</span>
+          {hasTitle && (
+            <>
+              <span className="w-1 h-1 rounded-full bg-border/40" />
+              <span className="truncate max-w-[120px] italic" title={resume.fileName}>
+                {resume.fileName}
+              </span>
+            </>
+          )}
         </div>
       </div>
 
-      {/* Actions */}
-      <div className="flex items-center gap-1.5 shrink-0 ml-3">
+      {/* Row 3: Action buttons */}
+      <div className="flex items-center justify-end gap-1.5 border-t border-border/40 dark:border-white/[0.04] pt-2.5 mt-0.5">
         <button
           type="button"
           onClick={handleOpenPdf}
-          className="text-text-secondary hover:text-text-primary p-1.5 rounded-small hover:bg-background-secondary transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
+          className="text-text-secondary hover:text-text-primary p-1.5 rounded-small hover:bg-background-secondary dark:hover:bg-white/[0.05] transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
           title="Open PDF file"
           aria-label={`Open PDF file of ${resume.fileName}`}
         >
@@ -111,7 +142,7 @@ export const ResumeCard: React.FC<ResumeCardProps> = ({
         <button
           type="button"
           onClick={handleCopyFilename}
-          className="text-text-secondary hover:text-text-primary p-1.5 rounded-small hover:bg-background-secondary transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
+          className="text-text-secondary hover:text-text-primary p-1.5 rounded-small hover:bg-background-secondary dark:hover:bg-white/[0.05] transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
           title="Copy original filename"
           aria-label={`Copy filename of ${resume.fileName}`}
         >
@@ -119,8 +150,18 @@ export const ResumeCard: React.FC<ResumeCardProps> = ({
         </button>
         <button
           type="button"
+          onClick={() => setIsModalOpen(true)}
+          className={`p-1.5 rounded-small hover:bg-background-secondary dark:hover:bg-white/[0.05] transition-colors focus:outline-none focus:ring-1 focus:ring-accent
+            ${hasTitle ? 'text-accent dark:bg-accent/10 dark:text-accent' : 'text-text-secondary hover:text-text-primary'}`}
+          title="Edit resume title"
+          aria-label={`Edit title of ${resume.fileName}`}
+        >
+          <Tag className="w-3.5 h-3.5" />
+        </button>
+        <button
+          type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="text-text-secondary hover:text-text-primary p-1.5 rounded-small hover:bg-background-secondary transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
+          className="text-text-secondary hover:text-text-primary p-1.5 rounded-small hover:bg-background-secondary dark:hover:bg-white/[0.05] transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
           title="Replace resume file"
           aria-label={`Replace ${resume.fileName}`}
         >
@@ -136,6 +177,15 @@ export const ResumeCard: React.FC<ResumeCardProps> = ({
           <Trash2 className="w-3.5 h-3.5" />
         </button>
       </div>
+
+      <ResumeTitleModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleTitleSubmit}
+        currentTitle={resume.title}
+        defaultTitle={resume.fileName.substring(0, resume.fileName.lastIndexOf('.')) || resume.fileName}
+      />
     </div>
   );
 };
+export default ResumeCard;

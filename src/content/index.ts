@@ -1,5 +1,6 @@
 import { FloatingButton } from './components/FloatingButton';
 import { Toast } from './components/Toast';
+import { extractPageText } from './pageReader';
 
 console.info('[Lative Content Script] Initialized successfully');
 
@@ -83,6 +84,11 @@ chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) =
         Toast.show(payload.message, payload.type || 'success');
       }
       sendResponse({ success: true });
+      break;
+    }
+    case 'EXTRACT_PAGE_TEXT': {
+      const text = extractPageText();
+      sendResponse({ success: true, text });
       break;
     }
     default:

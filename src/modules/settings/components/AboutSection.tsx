@@ -35,11 +35,11 @@ export const AboutSection: React.FC = () => {
 
       {/* About Info */}
       <div className="flex flex-col items-center justify-center py-2 text-center text-text-secondary">
-        <div className="flex items-center gap-1.5 text-[10px] select-none font-bold uppercase tracking-wider">
+        <div className="flex items-center gap-1.5 text-[11px] select-none font-bold uppercase tracking-wider">
           <Info className="w-3.5 h-3.5" />
           <span>Lative v1.0.0-alpha.2</span>
         </div>
-        <span className="text-[9px] text-text-secondary/80 mt-0.5">
+        <span className="text-[10px] text-text-secondary/80 mt-0.5">
           Privacy-first local career manager
         </span>
       </div>

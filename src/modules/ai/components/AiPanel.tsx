@@ -4,6 +4,7 @@ import { useSettings } from '@/modules/settings';
 import { ResumeSelector } from './ResumeSelector';
 import { useResume } from '@/modules/resume';
 import { Button } from '@/shared/components/Button';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { useChat } from '../hooks/useChat';
 import { ChatContainer } from './ChatContainer';
 
@@ -19,23 +20,18 @@ export const AiPanel: React.FC = () => {
   // Handle missing API Key state
   if (isKeyMissing) {
     return (
-      <div className="flex flex-col items-center justify-center text-center p-6 min-h-[350px] select-none font-sans">
-        <div className="w-12 h-12 rounded-full bg-background-secondary border border-border flex items-center justify-center text-accent mb-4 shrink-0 shadow-card animate-pulse">
-          <Sparkles className="w-5 h-5 text-accent" />
-        </div>
-        <h3 className="text-sm font-semibold text-text-primary leading-tight tracking-tight">
-          AI Assistant Offline
-        </h3>
-        <p className="text-xs text-text-secondary mt-2 max-w-[260px] leading-normal">
-          Add your Gemini API Key in the Settings panel to enable AI-powered application assistance.
-        </p>
-        <div className="mt-5 p-3 bg-card border border-border rounded-medium flex items-start gap-2.5 max-w-[280px] text-left">
-          <AlertCircle className="w-4 h-4 text-text-secondary mt-0.5 shrink-0" />
-          <span className="text-[10px] text-text-secondary leading-normal">
+      <EmptyState
+        title="AI Assistant Offline"
+        description="Add your Gemini API Key in the Settings panel to enable AI-powered application assistance."
+        icon={Sparkles}
+      >
+        <div className="mt-5 p-3 bg-card border border-border/60 dark:border-white/[0.06] rounded-large flex items-start gap-2.5 max-w-[280px] text-left">
+          <AlertCircle className="w-3.5 h-3.5 text-text-secondary mt-0.5 shrink-0" />
+          <span className="text-[11px] text-text-secondary leading-normal">
             Lative uses your personal API Key to communicate directly with Google Gemini. No resume data is ever shared with other servers.
           </span>
         </div>
-      </div>
+      </EmptyState>
     );
   }
 
@@ -57,14 +53,13 @@ export const AiPanel: React.FC = () => {
       {/* Chat Conversation Scroll Area */}
       <div className="flex-1 min-h-0 bg-background-secondary border border-border rounded-medium flex flex-col p-3.5">
         {hasNoResumes ? (
-          <div className="flex-1 flex flex-col items-center justify-center text-center p-4">
-            <Sparkles className="w-8 h-8 text-text-secondary/40 mb-2.5" />
-            <p className="text-xs font-medium text-text-secondary max-w-[220px] leading-normal">
-              Please upload a resume in the Resume tab to start using the assistant.
-            </p>
-          </div>
+          <EmptyState
+            title="No Resume Selected"
+            description="Please upload a resume in the Resume tab to start using Lative's career AI assistant."
+            icon={Sparkles}
+          />
         ) : (
-          <ChatContainer messages={messages} isLoading={isLoading} />
+          <ChatContainer messages={messages} isLoading={isLoading} onSendMessage={sendMessage} />
         )}
       </div>
 

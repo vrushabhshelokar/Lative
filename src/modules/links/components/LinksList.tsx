@@ -1,9 +1,9 @@
 import React from 'react';
-import { Plus, Link2 } from 'lucide-react';
+import { Link2 } from 'lucide-react';
 import { useLinks } from '../hooks/useLinks';
 import { LinkCard } from './LinkCard';
 import { Link } from '../types';
-import { Button } from '@/shared/components/Button';
+import { AddButton } from '@/shared/components/AddButton';
 import { Skeleton } from '@/shared/components/Skeleton';
 import { EmptyState } from '@/shared/components/EmptyState';
 
@@ -49,26 +49,22 @@ export const LinksList: React.FC<LinksListProps> = ({ onAdd, onEdit, onDelete })
         <span className="text-xs font-semibold text-text-secondary select-none">
           Saved Profiles ({links.length})
         </span>
-        <Button
-          variant="secondary"
-          size="sm"
+        <AddButton
+          label="Add Link"
           onClick={onAdd}
-          className="flex items-center gap-1 py-1 px-2.5 text-xs font-medium"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          <span>Add Link</span>
-        </Button>
+        />
       </div>
 
       {/* Scrollable list */}
       <div className="flex-1 overflow-y-auto px-4 py-3.5 flex flex-col gap-3 min-h-0">
-        {links.map((link) => (
-          <LinkCard
-            key={link.id}
-            link={link}
-            onEdit={onEdit}
-            onDelete={onDelete}
-          />
+        {links.map((link, index) => (
+          <div key={link.id} className={`animate-fade-in-up stagger-${Math.min(index + 1, 8)}`}>
+            <LinkCard
+              link={link}
+              onEdit={onEdit}
+              onDelete={onDelete}
+            />
+          </div>
         ))}
       </div>
     </div>

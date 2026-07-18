@@ -22,10 +22,10 @@ export const LinkCard: React.FC<LinkCardProps> = ({ link, onEdit, onDelete }) =>
   };
 
   return (
-    <div className="flex items-center justify-between p-3.5 bg-card border border-border rounded-medium shadow-card hover:border-border/80 transition-all select-none font-sans group">
+    <div className="flex items-center justify-between p-3.5 bg-card dark:bg-gradient-to-b dark:from-white/[0.06] dark:to-white/[0.01] border border-border dark:border-white/[0.06] rounded-large shadow-card dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] hover:border-border/80 dark:hover:border-white/[0.12] transition-all select-none font-sans group">
       <div className="flex items-center gap-3 min-w-0 flex-1">
-        {/* Rounded Icon Circle */}
-        <div className="w-8 h-8 rounded-full bg-background-secondary border border-border flex items-center justify-center text-text-secondary group-hover:text-accent transition-colors shrink-0">
+        {/* Rounded Icon Box */}
+        <div className="w-8 h-8 rounded-xl bg-background-secondary/60 border border-border dark:bg-white/[0.04] dark:border-white/[0.08] flex items-center justify-center text-text-secondary group-hover:text-accent transition-colors shrink-0">
           <Link2 className="w-4 h-4" />
         </div>
 
@@ -38,7 +38,7 @@ export const LinkCard: React.FC<LinkCardProps> = ({ link, onEdit, onDelete }) =>
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] text-text-secondary hover:text-accent hover:underline truncate select-none leading-normal mt-0.5"
+            className="text-[11px] text-text-secondary hover:text-accent hover:underline truncate select-none leading-normal mt-0.5"
           >
             {link.url}
           </a>
@@ -50,7 +50,7 @@ export const LinkCard: React.FC<LinkCardProps> = ({ link, onEdit, onDelete }) =>
         <button
           type="button"
           onClick={handleCopy}
-          className="text-text-secondary hover:text-text-primary p-1.5 rounded-small hover:bg-background-secondary transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
+          className="text-text-secondary hover:text-text-primary p-1.5 rounded-small hover:bg-background-secondary dark:hover:bg-white/[0.05] transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
           title="Copy URL"
           aria-label={`Copy ${link.id} URL`}
         >
@@ -59,7 +59,7 @@ export const LinkCard: React.FC<LinkCardProps> = ({ link, onEdit, onDelete }) =>
         <button
           type="button"
           onClick={() => onEdit(link)}
-          className="text-text-secondary hover:text-text-primary p-1.5 rounded-small hover:bg-background-secondary transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
+          className="text-text-secondary hover:text-text-primary p-1.5 rounded-small hover:bg-background-secondary dark:hover:bg-white/[0.05] transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
           title="Edit link"
           aria-label={`Edit ${link.id}`}
         >

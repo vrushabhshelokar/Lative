@@ -33,11 +33,11 @@ export const ResumeSelector: React.FC = () => {
         <select
           value={selectedResumeId || ''}
           onChange={(e) => setSelectedResumeId(e.target.value || null)}
-          className="w-full h-10 pl-9 pr-8 text-xs rounded-medium bg-card border border-border text-text-primary placeholder:text-text-secondary/50 transition-all duration-standard focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent cursor-pointer appearance-none"
+          className="w-full h-10 pl-9 pr-8 text-xs rounded-medium bg-card dark:bg-background-deep border border-border dark:border-white/[0.08] text-text-primary placeholder:text-text-secondary/40 transition-all duration-standard focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/40 focus:ring-offset-1 focus:ring-offset-background dark:focus:ring-offset-background-deep cursor-pointer appearance-none"
         >
           {resumes.map((resume) => (
             <option key={resume.id} value={resume.id}>
-              {resume.fileName}
+              {resume.title || resume.fileName}
             </option>
           ))}
         </select>

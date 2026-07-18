@@ -1,6 +1,7 @@
 export * from './components/CertificateCard';
 export * from './components/CertificateList';
 export * from './components/CertificateView';
+export * from './components/CertificateMetadataModal';
 export * from './hooks/useCertificate';
 export * from './storage/certificateStore';
 export * from './services/certificateService';

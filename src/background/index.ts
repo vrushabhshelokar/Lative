@@ -1,4 +1,5 @@
 import { handleCartAddCurrentPage, handleCartDelete } from './handlers/cartHandler';
+import { handleGetActivePageText } from './handlers/page';
 
 console.info('Lative background service worker initialized');
 
@@ -13,6 +14,8 @@ const handleMessage = async (message: ChromeMessage) => {
       return handleCartAddCurrentPage(message.payload);
     case 'CART_DELETE':
       return handleCartDelete(message.payload);
+    case 'GET_ACTIVE_PAGE_TEXT':
+      return handleGetActivePageText();
     default:
       return { success: false, error: `Unhandled message type: ${message.type}` };
   }

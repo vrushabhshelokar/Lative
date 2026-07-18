@@ -11,6 +11,7 @@ export interface UseResumeResult {
   deleteResume: (id: string) => Promise<void>;
   replaceResume: (id: string, file: File) => Promise<void>;
   getParsedResume: (id: string) => Promise<ParsedResume | undefined>;
+  updateResumeTitle: (id: string, title?: string) => Promise<void>;
 }
 
 export const useResume = (): UseResumeResult => {
@@ -53,12 +54,24 @@ export const useResume = (): UseResumeResult => {
     return resumeService.getParsedResume(id);
   };
 
+  const updateResumeTitle = async (id: string, title?: string) => {
+    try {
+      setError(null);
+      await resumeService.updateResumeTitle(id, title);
+    } catch (err) {
+      const errorObj = err as Error;
+      setError(errorObj);
+      throw errorObj;
+    }
+  };
+
   return {
     resumes: resumes || [],
     isLoading,
     error,
     deleteResume,
     replaceResume,
-    getParsedResume
+    getParsedResume,
+    updateResumeTitle
   };
 };

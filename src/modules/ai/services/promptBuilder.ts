@@ -1,6 +1,11 @@
 import { RawAIContext } from '../context/aiContextBuilder';
 
 export class PromptBuilder {
+  /**
+   * Compiles the RawAIContext into a structured system instruction text block, incorporating
+   * resume text, page details, and job descriptions under strict anti-hallucination rules.
+   * Dynamically filters resume details based on the context-aware requiredSections configurations.
+   */
   static formatSystemInstruction(context: RawAIContext): string {
     const parts = [
       'You are Lative, a premium, privacy-first local career assistant.',
@@ -10,15 +15,47 @@ export class PromptBuilder {
 
     if (context.parsedResume) {
       const parsed = context.parsedResume;
+      // Default to structured sections (pruning fullText) if not explicitly set
+      const sections = context.requiredSections || ['skills', 'projects', 'education', 'experience', 'achievements'];
+
       parts.push(
         '',
-        "Here is the context of the user's selected resume:",
-        `[FULL RESUME TEXT]\n${parsed.fullText || ''}\n`,
-        `[SKILLS]\n${(parsed.skills || []).join(', ')}\n`,
-        `[PROJECTS]\n${(parsed.projects || []).join('\n')}\n`,
-        `[EDUCATION]\n${(parsed.education || []).join('\n')}\n`,
-        `[EXPERIENCE]\n${(parsed.experience || []).join('\n')}\n`,
-        `[ACHIEVEMENTS]\n${(parsed.achievements || []).join('\n')}\n`
+        "Here is the context of the user's selected resume:"
+      );
+
+      if (sections.includes('fullText')) {
+        parts.push(`[FULL RESUME TEXT]\n${parsed.fullText || ''}\n`);
+      }
+      if (sections.includes('skills')) {
+        parts.push(`[SKILLS]\n${(parsed.skills || []).join(', ')}\n`);
+      }
+      if (sections.includes('projects')) {
+        parts.push(`[PROJECTS]\n${(parsed.projects || []).join('\n')}\n`);
+      }
+      if (sections.includes('education')) {
+        parts.push(`[EDUCATION]\n${(parsed.education || []).join('\n')}\n`);
+      }
+      if (sections.includes('experience')) {
+        parts.push(`[EXPERIENCE]\n${(parsed.experience || []).join('\n')}\n`);
+      }
+      if (sections.includes('achievements')) {
+        parts.push(`[ACHIEVEMENTS]\n${(parsed.achievements || []).join('\n')}\n`);
+      }
+    }
+
+    if (context.pageContent) {
+      parts.push(
+        '',
+        "Here is the context of the webpage the user is currently viewing:",
+        `[WEBPAGE CONTENT]\n${context.pageContent.trim()}\n`
+      );
+    }
+
+    if (context.jobDescription) {
+      parts.push(
+        '',
+        "Here is the job description context provided by the user:",
+        `[JOB DESCRIPTION]\n${context.jobDescription.trim()}\n`
       );
     }
 

@@ -5,6 +5,7 @@ export interface ResumeRecord {
   fileSize: number;
   uploadedAt: number;
   updatedAt: number;
+  title?: string;
 }
 
 export interface ParsedResumeRecord {
@@ -18,6 +19,15 @@ export interface ParsedResumeRecord {
   createdAt: number;
 }
 
+export interface CertificateMetadata {
+  title: string;
+  organization?: string;
+  issueDate?: string;
+  expiryDate?: string;
+  credentialId?: string;
+  verificationUrl?: string;
+}
+
 export interface CertificateRecord {
   id: string;
   fileName: string;
@@ -25,6 +35,7 @@ export interface CertificateRecord {
   mimeType: string;
   uploadedAt: number;
   updatedAt: number;
+  metadata?: CertificateMetadata;
 }
 
 export interface LinkRecord {

@@ -14,7 +14,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   style,
   ...props
 }) => {
-  const baseClass = 'animate-pulse bg-border/60';
+  const baseClass = 'animate-shimmer';
   
   const variantClasses = {
     text: 'h-3.5 w-4/5 rounded-small mb-2',

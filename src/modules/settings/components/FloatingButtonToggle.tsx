@@ -17,7 +17,7 @@ export const FloatingButtonToggle: React.FC = () => {
           <span className="text-xs font-semibold text-text-primary leading-none">
             Floating Save Button
           </span>
-          <span className="text-[10px] text-text-secondary leading-normal">
+          <span className="text-[11px] text-text-secondary leading-normal">
             Show a floating bookmark icon on active web pages
           </span>
         </div>

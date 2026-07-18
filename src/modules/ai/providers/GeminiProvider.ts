@@ -38,17 +38,6 @@ export class GeminiProvider implements AIProvider {
         selectedModel = models[0];
       }
 
-      const health = await this.healthCheck(apiKey, selectedModel);
-      if (!health.connectivity || !health.authentication) {
-        return {
-          valid: false,
-          provider: 'google',
-          selectedModel: '',
-          availableModels: [],
-          message: 'API Key authentication failed.'
-        };
-      }
-
       return {
         valid: true,
         provider: 'google',
@@ -111,8 +100,15 @@ export class GeminiProvider implements AIProvider {
       if (err instanceof TypeError && errorObj.message.includes('Failed to fetch')) {
         throw new Error('Network error. Please check your internet connection.');
       }
-      
-      const apiErr = err as { status?: number; statusCode?: number; message?: string };
+      const apiErr = err as {
+        status?: number;
+        statusCode?: number;
+        message?: string;
+        reason?: string;
+        errorDetails?: Array<{ reason?: string; metadata?: Record<string, string> }>;
+        response?: Response;
+        headers?: Headers | Record<string, string>;
+      };
       const status = apiErr.status || apiErr.statusCode;
       if (status) {
         if (status === 400 || status === 403) {
@@ -122,6 +118,50 @@ export class GeminiProvider implements AIProvider {
           throw new Error(`Unsupported model error: ${options.model} not found.`);
         }
         if (status === 429) {
+          // 1. Try structured SDK reason
+          const reason = apiErr.reason || apiErr.errorDetails?.[0]?.reason;
+          
+          let isRateLimit = false;
+          let isQuotaExhausted = false;
+
+          if (reason) {
+            if (reason === 'RATE_LIMIT_EXCEEDED' || reason === 'RESOURCE_EXHAUSTED') {
+              isRateLimit = true;
+            } else if (reason === 'QUOTA_EXCEEDED' || reason === 'USER_LIMIT_EXCEEDED') {
+              isQuotaExhausted = true;
+            }
+          }
+
+          // 2. Fallback to message parsing
+          if (!isRateLimit && !isQuotaExhausted) {
+            const errMsg = (apiErr.message || '').toLowerCase();
+            if (errMsg.includes('queries per minute') || errMsg.includes('rate limit') || errMsg.includes('resource_exhausted')) {
+              isRateLimit = true;
+            } else {
+              isQuotaExhausted = true;
+            }
+          }
+
+          // 3. Extract Retry-After if provided
+          let retryAfter: string | null = null;
+          if (apiErr.response && typeof apiErr.response.headers?.get === 'function') {
+            retryAfter = apiErr.response.headers.get('retry-after');
+          } else if (apiErr.headers) {
+            if (typeof (apiErr.headers as Headers).get === 'function') {
+              retryAfter = (apiErr.headers as Headers).get('retry-after');
+            } else {
+              retryAfter = (apiErr.headers as Record<string, string>)['retry-after'] ||
+                           (apiErr.headers as Record<string, string>)['Retry-After'] || null;
+            }
+          }
+
+          if (isRateLimit) {
+            if (retryAfter) {
+              throw new Error(`Rate limit reached. Please wait ${retryAfter} seconds before trying again.`);
+            }
+            throw new Error('Rate limit reached. Please wait before trying again.');
+          }
+
           throw new Error('Quota limits exceeded. Please check your Gemini API account limits.');
         }
         throw new Error(`API error (status ${status}): ${apiErr.message}`);

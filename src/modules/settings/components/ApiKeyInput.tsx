@@ -85,15 +85,15 @@ export const ApiKeyInput: React.FC = () => {
           <button
             type="button"
             onClick={() => setShowKey(!showKey)}
-            className="absolute right-3 top-[26px] text-text-secondary hover:text-text-primary focus:outline-none"
+            className="absolute right-3 top-[26px] text-text-secondary hover:text-text-primary transition-all duration-standard focus:outline-none focus:ring-1 focus:ring-accent rounded-small p-0.5"
             aria-label={showKey ? 'Hide API key' : 'Show API key'}
           >
-            {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            {showKey ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
           </button>
         </div>
         
         {settings.aiConfig.selectedModel && (
-          <div className="text-[10px] text-text-secondary flex flex-col gap-0.5 mt-0.5">
+          <div className="text-[11px] text-text-secondary flex flex-col gap-0.5 mt-0.5">
             <div>Model: <span className="font-semibold text-text-primary">{settings.aiConfig.selectedModel}</span></div>
             <div>Validated: <span className="text-text-primary">{new Date(settings.aiConfig.validatedAt).toLocaleString()}</span></div>
           </div>

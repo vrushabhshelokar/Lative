@@ -2,10 +2,17 @@ import React, { useEffect, useRef } from 'react';
 import { Sparkles } from 'lucide-react';
 import { Message } from '../hooks/useAiContext';
 import { ChatMessage } from './ChatMessage';
+import { QuickActions } from './QuickActions';
 
 export interface ChatContainerProps {
   messages: Message[];
   isLoading: boolean;
+  onSendMessage: (
+    text: string,
+    override?: string,
+    requiredSectionsOverride?: ('fullText' | 'skills' | 'projects' | 'education' | 'experience' | 'achievements')[],
+    pageContent?: string
+  ) => Promise<void>;
 }
 
 const LoadingBubble: React.FC = () => (
@@ -18,7 +25,7 @@ const LoadingBubble: React.FC = () => (
   </div>
 );
 
-export const ChatContainer: React.FC<ChatContainerProps> = ({ messages, isLoading }) => {
+export const ChatContainer: React.FC<ChatContainerProps> = ({ messages, isLoading, onSendMessage }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,7 +34,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ messages, isLoadin
 
   if (messages.length === 0) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-center p-6 select-none font-sans min-h-0">
+      <div className="flex-1 flex flex-col items-center justify-center text-center p-4 select-none font-sans min-h-0">
         <Sparkles className="w-8 h-8 text-accent/60 mb-2.5 animate-pulse" />
         <h4 className="text-xs font-semibold text-text-primary leading-tight">
           Ready to Assist
@@ -35,6 +42,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ messages, isLoadin
         <p className="text-[11px] text-text-secondary max-w-[240px] mt-1.5 leading-normal">
           Ask questions about your resume, paste a job description to compare, or request key skills summaries.
         </p>
+        <QuickActions onActionClick={onSendMessage} disabled={isLoading} />
       </div>
     );
   }
@@ -49,3 +57,4 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ messages, isLoadin
     </div>
   );
 };
+export default ChatContainer;

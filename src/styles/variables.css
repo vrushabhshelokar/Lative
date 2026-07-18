@@ -1,38 +1,41 @@
 :root {
-  /* Light Theme Colors (Default) */
-  --background: 0 0% 100%;             /* #FFFFFF */
-  --background-secondary: 240 5.9% 96.9%; /* #F7F7F8 */
-  --card: 0 0% 100%;                   /* #FFFFFF */
-  --border: 220 13% 91%;               /* #E5E7EB */
-  --text-primary: 221 39% 11%;         /* #111827 */
-  --text-secondary: 220 8.9% 46.1%;    /* #6B7280 */
-
-  /* Premium Violet Accent (Shared baseline, adapted per mode if needed) */
-  --accent: 239 84.3% 66.7%;           /* #6366F1 */
-  --accent-hover: 243 75.4% 58.6%;     /* #4F46E5 */
-
-  /* Destructive Actions Red */
-  --danger: 0 84.3% 60.2%;             /* #EF4444 */
-  --danger-hover: 0 72.2% 50.6%;       /* #DC2626 */
-  
-  /* Focus outlines */
-  --ring: 239 84.3% 66.7%;
+  /* Light Mode Colors (Base Defaults) */
+  --background: 0 0% 100%;
+  --background-secondary: 240 5.9% 96.9%;
+  --background-deep: 240 5.9% 94%;
+  --background-elevated: 240 5.9% 98%;
+  --card: 0 0% 100%;
+  --border: 220 13% 91%;
+  --border-hover: 220 13% 85%;
+  --border-accent: 234 57% 75%;
+  --text-primary: 221 39% 11%;
+  --text-secondary: 220 8.9% 46.1%;
+  --accent: 234 57% 60%;
+  --accent-hover: 235 60% 63%;
+  --danger: 0 84.3% 60.2%;
+  --danger-hover: 0 72.2% 50.6%;
+  --ring: 234 57% 60%;
+  --success: 142 70.6% 45.3%;
+  --success-hover: 142 72% 40%;
 }
 
 .dark {
-  /* Dark Theme Colors */
-  --background: 220 17.6% 7%;          /* #0F1115 */
-  --background-secondary: 222 18.8% 11%; /* #171A21 */
-  --card: 220 10.9% 14.3%;             /* #1E222B */
-  --border: 220 18.8% 21.8%;           /* #2D3442 */
-  --text-primary: 0 0% 98%;            /* #F9FAFB */
-  --text-secondary: 240 5% 64.9%;      /* #A1A1AA */
-
-  --accent: 239 84.3% 66.7%;           /* #6366F1 */
-  --accent-hover: 244 75.7% 62.4%;     /* #4F46E5 optimized for dark */
-  
-  --danger: 0 84.3% 60.2%;
-  --danger-hover: 0 72.2% 55%;
-  
-  --ring: 239 84.3% 66.7%;
+  /* Dark Mode Colors ("Deep Space" UI Vision Specification) */
+  --background: 240 9% 2%;              /* #050506 - background-base */
+  --background-secondary: 240 9% 4%;    /* #0a0a0c - background-elevated */
+  --background-deep: 240 20% 1%;        /* #020203 - background-deep */
+  --background-elevated: 240 9% 4%;     /* #0a0a0c - background-elevated */
+  --card: 240 9% 2.8%;
+  --border: 240 5% 15%;                 /* border-default (rgba(255,255,255,0.06)) */
+  --border-hover: 240 5% 25%;           /* border-hover (rgba(255,255,255,0.10)) */
+  --border-accent: 234 57% 35%;         /* border-accent (rgba(94,106,210,0.30)) */
+  --text-primary: 240 5% 93%;           /* #EDEDEF - foreground */
+  --text-secondary: 219 7% 57%;         /* #8A8F98 - foreground-muted */
+  --accent: 234 57% 60%;                /* #5E6AD2 - accent */
+  --accent-hover: 235 60% 63%;          /* #6872D9 - accent-bright */
+  --danger: 358 65% 48%;                /* desaturated dark red */
+  --danger-hover: 358 70% 43%;
+  --ring: 234 57% 60%;
+  --success: 142 70.6% 45.3%;           /* desaturated emerald */
+  --success-hover: 142 72% 40%;
 }

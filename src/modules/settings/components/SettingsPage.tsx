@@ -3,6 +3,8 @@ import { useSettings } from '../hooks/useSettings';
 import { ApiKeyInput } from './ApiKeyInput';
 import { ThemeSelector } from './ThemeSelector';
 import { FloatingButtonToggle } from './FloatingButtonToggle';
+import { ExportSection } from './ExportSection';
+import { ImportSection } from './ImportSection';
 import { ClearDataButton } from './ClearDataButton';
 import { AboutSection } from './AboutSection';
 
@@ -39,7 +41,13 @@ export const SettingsPage: React.FC = () => {
         {/* Features Settings */}
         <FloatingButtonToggle />
 
-        {/* Data & Backup Settings */}
+        {/* Backup Settings */}
+        <ExportSection />
+
+        {/* Restore Settings */}
+        <ImportSection />
+
+        {/* Data Wiping Operations */}
         <ClearDataButton />
 
         {/* About & Support Links */}

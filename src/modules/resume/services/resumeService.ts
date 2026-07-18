@@ -69,6 +69,10 @@ export const resumeService = {
     );
   },
 
+  updateResumeTitle: async (id: string, title?: string): Promise<void> => {
+    await resumeStore.updateTitle(id, title);
+  },
+
   deleteResume: async (id: string): Promise<void> => {
     await resumeStore.delete(id);
   }

@@ -50,14 +50,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             type={type}
             disabled={disabled}
-            className={`w-full h-10 px-3.5 text-sm rounded-medium bg-card border text-text-primary placeholder:text-text-secondary/50 transition-all duration-standard focus:outline-none focus:ring-1
+            className={`w-full h-10 px-3.5 text-xs rounded-medium bg-card border text-text-primary placeholder:text-text-secondary/40 transition-all duration-standard focus:outline-none
               ${leftIcon ? 'pl-10' : ''} 
               ${rightIcon ? 'pr-10' : ''}
-              ${disabled ? 'opacity-50 cursor-not-allowed bg-background-secondary' : ''}
+              ${disabled ? 'opacity-50 cursor-not-allowed bg-background-secondary/50 dark:bg-white/[0.02]' : ''}
               ${
                 error
-                  ? 'border-danger focus:border-danger focus:ring-danger'
-                  : 'border-border focus:border-accent focus:ring-accent'
+                  ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger/40 focus:ring-offset-1 focus:ring-offset-background dark:focus:ring-offset-background-deep'
+                  : 'border-border dark:border-white/[0.08] focus:border-accent focus:ring-2 focus:ring-accent/40 focus:ring-offset-1 focus:ring-offset-background dark:focus:ring-offset-background-deep'
               } 
               ${className}`}
             {...props}

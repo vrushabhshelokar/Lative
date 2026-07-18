@@ -956,6 +956,90 @@ This architecture choice may be revisited in future versions if streaming respon
 
 ---
 
+## Decision 086
+
+### UI_Vision.md is the Permanent Visual Source of Truth
+
+**Decision**
+
+`UI_Vision.md` is the permanent, uncompromised source of truth for all layout, coloring, typography, spacing, border roundness, and overlay states.
+
+**Reason**
+
+Guarantees visual cohesion and prevents ad-hoc, feature-specific style pollution across Popup and Content script modules.
+
+---
+
+## Decision 087
+
+### Premium Desktop Application Aesthetic
+
+**Decision**
+
+All components are styled following the dark/glass UI design guidelines (inspired by Linear, Raycast, and Vercel) instead of flat mobile aesthetics.
+
+**Reason**
+
+Creates a highly polished product identity suitable for modern desktop browser environments.
+
+---
+
+## Decision 088
+
+### Browser Extension Optimized for 380px Popup
+
+**Decision**
+
+Extension popup viewports must fit strictly within a `380px` width and `600px` height limit. Scrollbars are hidden or thin-customized, and horizontal scrollbars are banned.
+
+**Reason**
+
+Avoids extension screen clipping and matches standard Extension popup layout restrictions.
+
+---
+
+## Decision 089
+
+### Shared Component-First Architecture
+
+**Decision**
+
+Shared, generalized atoms (Button, Input, Skeleton, Modal, Toast, EmptyState) reside in `src/shared/components` and are imported by feature modules. No custom ad-hoc buttons or inputs are permitted in features.
+
+**Reason**
+
+Promotes styling consistency, reduces visual redundancy, and simplifies global layout maintenance.
+
+---
+
+## Decision 090
+
+### Theme-Aware Translucent Overlays
+
+**Decision**
+
+Banners and overlay panels (Toasts, Modals) must adapt dynamically to both Light and Dark modes using theme-aware backing glass layers and desaturated border highlights.
+
+**Reason**
+
+Resolves design disconnects and visual layout visibility issues when users change system themes.
+
+---
+
+## Decision 091
+
+### Build Watcher Loop Workaround
+
+**Decision**
+
+Production bundle build commands (`npm run build`, `pnpm build`, etc.) are explicitly avoided during active implementation steps due to compiler loop conflicts.
+
+**Reason**
+
+Developers use fast static analysis verification commands (`npx tsc --noEmit` and `npm run lint`) to assert validity during development turns.
+
+---
+
 # Final Decision Statement
 
 These decisions establish the foundation of Lative v1.0. They define the product's identity, technical direction, architectural boundaries, and user experience. Any future changes should be evaluated against this decision log to ensure the extension remains consistent with its original goals of privacy, simplicity, user control, and long-term maintainability.

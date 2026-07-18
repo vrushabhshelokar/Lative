@@ -8,7 +8,7 @@ This document defines the chronological execution plan for building **Lative v1.
 
 Goal: Initialize the codebase, configure toolchains, and build the navigation shell.
 
-### P0-T1: Project Initialization
+### [x] P0-T1: Project Initialization
 * **Objective**: Create folder structure and initialize `package.json` with primary scripts.
 * **Files**: 
   - `[NEW] package.json`
@@ -17,7 +17,7 @@ Goal: Initialize the codebase, configure toolchains, and build the navigation sh
 * **Dependencies**: None
 * **Definition of Done**: Folder structure matches `Folder_Structure.md` exactly, and `npm install` runs successfully.
 
-### P0-T2: TypeScript & Path Aliases Configuration
+### [x] P0-T2: TypeScript & Path Aliases Configuration
 * **Objective**: Configure TypeScript compiler rules and absolute path mapping (`@/*`).
 * **Files**: 
   - `[NEW] tsconfig.json`
@@ -25,7 +25,7 @@ Goal: Initialize the codebase, configure toolchains, and build the navigation sh
 * **Dependencies**: P0-T1
 * **Definition of Done**: `tsc --noEmit` runs successfully; compiler resolves `@/` to `src/`.
 
-### P0-T3: Tailwind CSS Setup & Theme Variables
+### [x] P0-T3: Tailwind CSS Setup & Theme Variables
 * **Objective**: Install Tailwind CSS, set up configs, and declare CSS variable design tokens for Light/Dark modes.
 * **Files**: 
   - `[NEW] tailwind.config.ts`
@@ -35,7 +35,7 @@ Goal: Initialize the codebase, configure toolchains, and build the navigation sh
 * **Dependencies**: P0-T2
 * **Definition of Done**: Custom theme variables are defined; Tailwind compilation succeeds.
 
-### P0-T4: Manifest V3 & CRXJS Configuration
+### [x] P0-T4: Manifest V3 & CRXJS Configuration
 * **Objective**: Define extension manifest, background service worker inputs, and popup configuration using CRXJS.
 * **Files**: 
   - `[NEW] public/manifest.json`
@@ -43,7 +43,7 @@ Goal: Initialize the codebase, configure toolchains, and build the navigation sh
 * **Dependencies**: P0-T3
 * **Definition of Done**: `npm run dev` builds extension to `dist/` directory; manifest format matches Chromium MV3 rules.
 
-### P0-T5: ESLint & Prettier Setup
+### [x] P0-T5: ESLint & Prettier Setup
 * **Objective**: Configure code linting rules, styling standards, and Prettier configurations.
 * **Files**: 
   - `[NEW] eslint.config.js`
@@ -51,7 +51,7 @@ Goal: Initialize the codebase, configure toolchains, and build the navigation sh
 * **Dependencies**: P0-T1
 * **Definition of Done**: `npm run lint` successfully scans codebase without warnings.
 
-### P0-T6: ThemeProvider Configuration
+### [x] P0-T6: ThemeProvider Configuration
 * **Objective**: Create context provider to manage light, dark, and system themes using tailwind CSS utility class names.
 * **Files**: 
   - `[NEW] src/providers/ThemeProvider.tsx`
@@ -59,7 +59,7 @@ Goal: Initialize the codebase, configure toolchains, and build the navigation sh
 * **Dependencies**: P0-T3
 * **Definition of Done**: System theme is detected; manually selecting theme updates local state and body element class lists.
 
-### P0-T7: Popup Navigation Framework & Layout
+### [x] P0-T7: Popup Navigation Framework & Layout
 * **Objective**: Create `PopupLayout` and build the horizontal top-segmented navigation switcher.
 * **Files**: 
   - `[NEW] src/popup/index.html`
@@ -76,7 +76,7 @@ Goal: Initialize the codebase, configure toolchains, and build the navigation sh
 
 Goal: Set up Dexie.js storage framework and define entity store schema versioning.
 
-### P1-T1: Dexie.js Integration
+### [x] P1-T1: Dexie.js Integration
 * **Objective**: Initialize local DB instance `LativeDB` using Dexie library wrapper.
 * **Files**: 
   - `[NEW] src/lib/dexie.ts`
@@ -84,7 +84,7 @@ Goal: Set up Dexie.js storage framework and define entity store schema versionin
 * **Dependencies**: P0-T2
 * **Definition of Done**: Dexie instance successfully initializes without runtime exceptions.
 
-### P1-T2: Storage Schema Definition & TS Models
+### [x] P1-T2: Storage Schema Definition & TS Models
 * **Objective**: Declare schemas for target IndexedDB stores and export strict TS types.
 * **Files**: 
   - `[NEW] src/database/schema.ts`
@@ -92,7 +92,7 @@ Goal: Set up Dexie.js storage framework and define entity store schema versionin
 * **Dependencies**: P1-T1
 * **Definition of Done**: TypeScript successfully compiles schemas for stores: `resumes`, `parsedResumes`, `certificates`, `links`, `mails`, `cart`, `settings`.
 
-### P1-T3: Schema Versioning & Migrations Setup
+### [x] P1-T3: Schema Versioning & Migrations Setup
 * **Objective**: Implement database migration system for version upgrades.
 * **Files**: 
   - `[NEW] src/database/migrations.ts`
@@ -333,7 +333,7 @@ Goal: Implement PDF validation, IndexedDB storage, and structural content parsin
 
 Goal: Implement certificate file storage (PNG, JPG, PDF) with no parsing logic.
 
-### P6-T1: Certificate Database Setup
+### [x] P6-T1: Certificate Database Setup
 * **Objective**: Implement storage CRUD methods for certificates collections.
 * **Files**: 
   - `[NEW] src/modules/certificate/storage/certificateStore.ts`
@@ -341,7 +341,7 @@ Goal: Implement certificate file storage (PNG, JPG, PDF) with no parsing logic.
 * **Dependencies**: P1-T2
 * **Definition of Done**: Storage engine reads and writes original binary files.
 
-### P6-T2: Certificate Validation Logic
+### [x] P6-T2: Certificate Validation Logic
 * **Objective**: Build file type (PNG, JPG, JPEG, WEBP, PDF) and size validators (max 15MB).
 * **Files**: 
   - `[NEW] src/modules/certificate/validators/validateCertificate.ts`
@@ -349,7 +349,7 @@ Goal: Implement certificate file storage (PNG, JPG, PDF) with no parsing logic.
 * **Dependencies**: P6-T1
 * **Definition of Done**: Validator accurately blocks unapproved types and rejects files exceeding 15MB.
 
-### P6-T3: Certificate Storage Services
+### [x] P6-T3: Certificate Storage Services
 * **Objective**: Create hook systems coordinating uploads and queries.
 * **Files**: 
   - `[NEW] src/modules/certificate/services/certificateService.ts`
@@ -357,7 +357,7 @@ Goal: Implement certificate file storage (PNG, JPG, PDF) with no parsing logic.
 * **Dependencies**: P6-T2
 * **Definition of Done**: Hook coordinates state updates and database writes.
 
-### P6-T4: Certificate UI List Views
+### [x] P6-T4: Certificate UI List Views
 * **Objective**: Render cards grid display for stored certificates.
 * **Files**: 
   - `[NEW] src/modules/certificate/components/CertificateList.tsx`
@@ -366,7 +366,7 @@ Goal: Implement certificate file storage (PNG, JPG, PDF) with no parsing logic.
 * **Dependencies**: P2-T2, P2-T5, P6-T3
 * **Definition of Done**: Lists display items; empty arrays show placeholder layouts correctly.
 
-### P6-T5: Certificate Operations Trigger
+### [x] P6-T5: Certificate Operations Trigger
 * **Objective**: Implement upload triggers, open files, replace configurations, and clear items.
 * **Files**: 
   - `[MODIFY] src/modules/certificate/components/CertificateCard.tsx`
@@ -379,7 +379,7 @@ Goal: Implement certificate file storage (PNG, JPG, PDF) with no parsing logic.
 
 Goal: Build career page bookmarks, content scripts, and floating save button inputs.
 
-### P7-T1: Cart Storage Methods
+### [x] P7-T1: Cart Storage Methods
 * **Objective**: Create cart table schemas and CRUD storage operations.
 * **Files**: 
   - `[NEW] src/modules/cart/storage/cartStore.ts`
@@ -387,7 +387,7 @@ Goal: Build career page bookmarks, content scripts, and floating save button inp
 * **Dependencies**: P1-T2
 * **Definition of Done**: Storage services manage manual and script-triggered bookmarks.
 
-### P7-T2: Manual Cart View UI
+### [x] P7-T2: Manual Cart View UI
 * **Objective**: Build list grids, manual Add/Edit modals, and delete buttons.
 * **Files**: 
   - `[NEW] src/modules/cart/components/CartList.tsx`
@@ -397,7 +397,7 @@ Goal: Build career page bookmarks, content scripts, and floating save button inp
 * **Dependencies**: P2-T2, P2-T3, P2-T5, P7-T1
 * **Definition of Done**: User can manually add URLs, copy values, open links, and clean entries.
 
-### P7-T3: Message Handlers Registration
+### [x] P7-T3: Message Handlers Registration
 * **Objective**: Build Background message router and register handlers for Content script updates.
 * **Files**: 
   - `[NEW] src/background/index.ts`
@@ -407,7 +407,7 @@ Goal: Build career page bookmarks, content scripts, and floating save button inp
 * **Dependencies**: P0-T4, P7-T1
 * **Definition of Done**: Background router loads and intercepts content script messages.
 
-### P7-T4: Content Script Injector
+### [x] P7-T4: Content Script Injector
 * **Objective**: Build Content script to inject floating save buttons into targeted page scopes.
 * **Files**: 
   - `[NEW] src/content/index.ts`
@@ -416,14 +416,14 @@ Goal: Build career page bookmarks, content scripts, and floating save button inp
 * **Dependencies**: P0-T4
 * **Definition of Done**: Loading active pages loads scripts and attaches elements to body elements.
 
-### P7-T5: Page Details Capture & Save
+### [x] P7-T5: Page Details Capture & Save
 * **Objective**: Implement save action (capture `document.title` and `window.location.href`).
 * **Files**: 
   - `[MODIFY] src/content/floatingButton.ts`
 * **Dependencies**: P7-T3, P7-T4
 * **Definition of Done**: Clicking button sends save requests to background router without displaying dialog popups.
 
-### P7-T6: Page Feedback Notification Toast
+### [x] P7-T6: Page Feedback Notification Toast
 * **Objective**: Inject simple toast notification into target pages to display save results.
 * **Files**: 
   - `[NEW] src/content/toast.ts`
@@ -436,7 +436,7 @@ Goal: Build career page bookmarks, content scripts, and floating save button inp
 
 Goal: Build local preferences storage and database backup services.
 
-### P8-T1: Local Settings Store
+### [x] P8-T1: Local Settings Store
 * **Objective**: Implement settings preferences layer using `chrome.storage.local`.
 * **Files**: 
   - `[NEW] src/lib/chrome.ts`
@@ -445,7 +445,7 @@ Goal: Build local preferences storage and database backup services.
 * **Dependencies**: P0-T4
 * **Definition of Done**: Settings (theme, key, toggle) load on start and write updates to Chrome storage.
 
-### P8-T2: Local Preferences Controller Hook
+### [x] P8-T2: Local Preferences Controller Hook
 * **Objective**: Build global settings context provider.
 * **Files**: 
   - `[NEW] src/providers/SettingsProvider.tsx`
@@ -453,7 +453,7 @@ Goal: Build local preferences storage and database backup services.
 * **Dependencies**: P8-T1
 * **Definition of Done**: Hook coordinates local states and chrome local store variables.
 
-### P8-T3: Settings Panel Layout
+### [x] P8-T3: Settings Panel Layout
 * **Objective**: Create Settings view layout.
 * **Files**: 
   - `[NEW] src/modules/settings/components/SettingsPage.tsx`
@@ -461,7 +461,7 @@ Goal: Build local preferences storage and database backup services.
 * **Dependencies**: P2-T1, P8-T2
 * **Definition of Done**: Page lists configurations; system options switch options on select.
 
-### P8-T4: Gemini Key & Theme Configuration
+### [x] P8-T4: Gemini Key & Theme Configuration
 * **Objective**: Create settings components for Gemini key inputs and theme selectors.
 * **Files**: 
   - `[NEW] src/modules/settings/components/ApiKeyInput.tsx`
@@ -469,7 +469,7 @@ Goal: Build local preferences storage and database backup services.
 * **Dependencies**: P8-T3
 * **Definition of Done**: System theme updates immediately; API Key hides details using password masks.
 
-### P8-T5: Floating Save Button Toggle
+### [x] P8-T5: Floating Save Button Toggle
 * **Objective**: Build toggle switches to inject/remove floating buttons.
 * **Files**: 
   - `[NEW] src/modules/settings/components/FloatingButtonToggle.tsx`
@@ -477,7 +477,7 @@ Goal: Build local preferences storage and database backup services.
 * **Dependencies**: P7-T4, P8-T3
 * **Definition of Done**: Toggling settings inserts or clears elements from pages instantly without reloads.
 
-### P8-T6: Metadata Views & Database Clear
+### [x] P8-T6: Metadata Views & Database Clear
 * **Objective**: Design About layouts, help references, and database wipe buttons.
 * **Files**: 
   - `[NEW] src/modules/settings/components/ClearDataButton.tsx`
@@ -491,7 +491,7 @@ Goal: Build local preferences storage and database backup services.
 
 Goal: Build the AI infrastructure, Gemini client, and chat UI.
 
-### P9-T1: Gemini SDK Wrapper
+### [x] P9-T1: Gemini SDK Wrapper
 * **Objective**: Install Gemini SDK and instantiate client with proxy settings.
 * **Files**: 
   - `[NEW] src/lib/gemini.ts`
@@ -499,14 +499,14 @@ Goal: Build the AI infrastructure, Gemini client, and chat UI.
 * **Dependencies**: P0-T2
 * **Definition of Done**: Client instantiates; placeholder query methods run without compilation warnings.
 
-### P9-T2: Key Validation Tool
+### [x] P9-T2: Key Validation Tool
 * **Objective**: Build check methods calling low-overhead Gemini endpoints.
 * **Files**: 
   - `[NEW] src/modules/ai/utils/validateApiKey.ts`
 * **Dependencies**: P9-T1
 * **Definition of Done**: Validation detects key states (returns success or prints friendly failures).
 
-### P9-T3: Resume Selector Component
+### [x] P9-T3: Resume Selector Component
 * **Objective**: Build dropdown menus to select target resumes for AI sessions.
 * **Files**: 
   - `[NEW] src/modules/ai/components/ResumeSelector.tsx`
@@ -514,7 +514,7 @@ Goal: Build the AI infrastructure, Gemini client, and chat UI.
 * **Dependencies**: P5-T8, P8-T2
 * **Definition of Done**: Dropdown reads stores; selected value persists to active settings contexts.
 
-### P9-T4: AI UI Layout Container
+### [x] P9-T4: AI UI Layout Container
 * **Objective**: Build chat container layouts.
 * **Files**: 
   - `[NEW] src/modules/ai/components/AiPanel.tsx`
@@ -522,7 +522,7 @@ Goal: Build the AI infrastructure, Gemini client, and chat UI.
 * **Dependencies**: P8-T2, P9-T3
 * **Definition of Done**: Panel renders selector, prompt area, and displays instructions when API keys are missing.
 
-### P9-T5: Session Chat UI
+### [x] P9-T5: Session Chat UI
 * **Objective**: Create chat bubble elements, text inputs, and submit actions.
 * **Files**: 
   - `[NEW] src/modules/ai/components/ChatContainer.tsx`
@@ -531,7 +531,7 @@ Goal: Build the AI infrastructure, Gemini client, and chat UI.
 * **Dependencies**: P9-T4
 * **Definition of Done**: User and AI text blocks display; layout supports scrolling; chat memory does not persist to disk.
 
-### P9-T6: Resume Switch Action resets session
+### [x] P9-T6: Resume Switch Action resets session
 * **Objective**: Build state monitors to clear active messages and reset contexts on resume switches.
 * **Files**: 
   - `[MODIFY] src/modules/ai/components/AiPanel.tsx`
@@ -544,21 +544,21 @@ Goal: Build the AI infrastructure, Gemini client, and chat UI.
 
 Goal: Build resume contexts, prompt templates, and AI resume actions.
 
-### P10-T1: Context Prompts Configuration
+### [x] P10-T1: Context Prompts Configuration
 * **Objective**: Declare prompts templates for summary generations and comparison operations.
 * **Files**: 
   - `[NEW] src/modules/ai/prompts/templates.ts`
 * **Dependencies**: P9-T1
 * **Definition of Done**: Prompts return deterministic structure frameworks for summaries and lists.
 
-### P10-T2: Context Builder Pipeline
+### [x] P10-T2: Context Builder Pipeline
 * **Objective**: Create context builders to compile prompt text, parsed resumes, and input questions.
 * **Files**: 
   - `[NEW] src/modules/ai/context/contextBuilder.ts`
 * **Dependencies**: P5-T1, P10-T1
 * **Definition of Done**: Context builder merges structural values (skills, projects) into prompt instructions.
 
-### P10-T3: Resume Summarization Actions
+### [x] P10-T3: Resume Summarization Actions
 * **Objective**: Connect quick action buttons for Profile Summary & Resume Summary.
 * **Files**: 
   - `[NEW] src/modules/ai/components/QuickActions.tsx`
@@ -566,21 +566,21 @@ Goal: Build resume contexts, prompt templates, and AI resume actions.
 * **Dependencies**: P9-T5, P10-T2
 * **Definition of Done**: Clicking summary chip sends parsed file contexts to Gemini API and stream-renders outputs.
 
-### P10-T4: Job Description Comparison
+### [x] P10-T4: Job Description Comparison
 * **Objective**: Build textbox form overlays for job comparisons.
 * **Files**: 
   - `[NEW] src/modules/ai/components/JdComparisonModal.tsx`
 * **Dependencies**: P2-T3, P10-T3
 * **Definition of Done**: Comparing parses inputs, evaluates differences, and returns matching strengths and missing skills.
 
-### P10-T5: Missing Skills Analysis
+### [x] P10-T5: Missing Skills Analysis
 * **Objective**: Create quick actions to compare resumes and list required but absent skills.
 * **Files**: 
   - `[MODIFY] src/modules/ai/components/QuickActions.tsx`
 * **Dependencies**: P10-T4
 * **Definition of Done**: AI outputs formatted checklists of missing skills.
 
-### P10-T6: Resume Selection Advisor
+### [x] P10-T6: Resume Selection Advisor
 * **Objective**: Create algorithms to advise best resume candidates for job descriptions.
 * **Files**: 
   - `[MODIFY] src/modules/ai/components/QuickActions.tsx`
@@ -593,7 +593,7 @@ Goal: Build resume contexts, prompt templates, and AI resume actions.
 
 Goal: Extract active webpage texts and pass context details to AI questions.
 
-### P11-T1: Page Text Extractor Script
+### [x] P11-T1: Page Text Extractor Script
 * **Objective**: Create content script service to extract visible page text.
 * **Files**: 
   - `[NEW] src/content/pageReader.ts`
@@ -601,7 +601,7 @@ Goal: Extract active webpage texts and pass context details to AI questions.
 * **Dependencies**: P7-T4
 * **Definition of Done**: Script extracts text strings from visible target selectors.
 
-### P11-T2: Background Analysis Router
+### [x] P11-T2: Background Analysis Router
 * **Objective**: Implement background handler routing request inputs.
 * **Files**: 
   - `[NEW] src/background/handlers/page.ts`
@@ -609,14 +609,14 @@ Goal: Extract active webpage texts and pass context details to AI questions.
 * **Dependencies**: P7-T3, P11-T1
 * **Definition of Done**: Message routing intercepts commands and returns target DOM text.
 
-### P11-T3: Extraction Truncation Helpers
+### [x] P11-T3: Extraction Truncation Helpers
 * **Objective**: Design context size calculators to trim page texts within model parameters.
 * **Files**: 
   - `[NEW] src/modules/ai/utils/tokenTrimmer.ts`
 * **Dependencies**: P11-T2
 * **Definition of Done**: Trimmer limits characters before sending to API wrapper.
 
-### P11-T4: Page Analysis Action Button
+### [x] P11-T4: Page Analysis Action Button
 * **Objective**: Wire up "Analyze Current Page" action.
 * **Files**: 
   - `[MODIFY] src/modules/ai/components/QuickActions.tsx`
@@ -629,7 +629,7 @@ Goal: Extract active webpage texts and pass context details to AI questions.
 
 Goal: Construct JSON-based database configuration backup systems.
 
-### P12-T1: Database Serializer
+### [x] P12-T1: Database Serializer
 * **Objective**: Build file serialization tools capturing database state.
 * **Files**: 
   - `[NEW] src/modules/settings/services/backupService.ts`
@@ -637,7 +637,7 @@ Goal: Construct JSON-based database configuration backup systems.
 * **Dependencies**: P1-T2, P8-T1
 * **Definition of Done**: Exporter returns structured JSON containing active records (excluding API keys).
 
-### P12-T2: Backup Exporter Action
+### [x] P12-T2: Backup Exporter Action
 * **Objective**: Implement download trigger generating database backup files.
 * **Files**: 
   - `[NEW] src/modules/settings/components/ExportSection.tsx`
@@ -645,57 +645,71 @@ Goal: Construct JSON-based database configuration backup systems.
 * **Dependencies**: P2-T1, P12-T1
 * **Definition of Done**: Export downloads file matching `.lative` file parameters.
 
-### P12-T3: Restore Checksum Validation
+### [x] P12-T3: Restore Checksum Validation
 * **Objective**: Design validation tools checking import configurations.
 * **Files**: 
   - `[NEW] src/modules/settings/validators/validateBackup.ts`
 * **Dependencies**: P12-T1
 * **Definition of Done**: Validator detects structural errors, checks version keys, and rejects tampered files.
 
-### P12-T4: Backup Import Coordinator
+### [x] P12-T4: Backup Import Coordinator
 * **Objective**: Implement import engine restoring collections and updating UI layouts.
 * **Files**: 
   - `[NEW] src/modules/settings/components/ImportSection.tsx`
 * **Dependencies**: P2-T3, P2-T4, P12-T3
 * **Definition of Done**: Selected backups restore IndexedDB schemas safely and update layouts.
 
----
-
 ## Phase 13 — Theme & UX Polish
 
-Goal: Refine animations, keyboard accessibility, focus indicators, and spacing rules.
+Goal: Refine themes, color design tokens, custom glass components, scrollbars, spacing, focus accessibility, loading states, and reveal animations.
 
-### P13-T1: UI Polish: Scrollbars & Spacing
-* **Objective**: Standardize thin custom scrollbars and spacing systems.
-* **Files**: 
-  - `[MODIFY] src/styles/globals.css`
-* **Dependencies**: P0-T3
-* **Definition of Done**: Scrollbars match theme style parameters; spacing conforms strictly to 8px grids.
+### [x] P13-T1: UI Redesign Planning
+* **Objective**: Define visual redesign criteria matching Cinema/Deep Space specifications.
 
-### P13-T2: Focus states and keyboard paths
-* **Objective**: Audit visual rings on actions for focus navigation.
-* **Files**: 
-  - `[MODIFY] src/shared/components/Button.tsx`
-  - `[MODIFY] src/shared/components/Input.tsx`
-* **Dependencies**: P2-T1
-* **Definition of Done**: Navigation is fully operable using keyboard tab paths.
+### [x] P13-T2: Design Tokens & Global Theme
+* **Objective**: Declare CSS custom variables in globals and config mapping definitions.
 
-### P13-T3: Framer Motion Transitions
-* **Objective**: Add list items entry/exit animations.
-* **Files**: 
-  - `[MODIFY] src/modules/links/components/LinksList.tsx`
-  - `[MODIFY] src/modules/mail/components/MailsList.tsx`
-  - `[MODIFY] src/modules/resume/components/ResumeList.tsx`
-* **Dependencies**: P0-T7
-* **Definition of Done**: Tab shifts use transitions with durations between 180–250ms.
+### [x] P13-T3: Shared UI Components Refactoring
+* **Objective**: Refactor Button, Input, Skeleton, Modal, and Card base layouts.
 
-### P13-T4: ARIA Accessibility Review
-* **Objective**: Annotate UI components with ARIA labels.
-* **Files**: 
-  - `[MODIFY] src/shared/components/Button.tsx`
-  - `[MODIFY] src/shared/components/Input.tsx`
-* **Dependencies**: P2-T1
-* **Definition of Done**: Screen readers identify action roles and labels.
+### [x] P13-T4: Navigation Polish
+* **Objective**: Re-dimension navigation panel headers and alignment states.
+
+### [x] P13-T5: Popup Layout & Viewport Anchoring
+* **Objective**: Wire up backing blurred light-pools and background gradients.
+
+### [x] P13-T6: Custom Glass Cards
+* **Objective**: Refactor LinkCard, MailCard, ResumeCard, and CertificateCard.
+
+### [x] P13-T7: Forms & Input Ring Outlines
+* **Objective**: Add ring offsets to form elements (JdComparisonModal, ResumeSelector).
+
+### [x] P13-T8: ButtonCTAs & Inset Glow Actions
+* **Objective**: Refactor button glow states (ApiKeyInput, ThemeSelector).
+
+### [x] P13-T9: Lists Stacking & Hover Border Highlights
+* **Objective**: Audit list heights, borders, and margins.
+
+### [x] P13-T10: Onboarding Empty States Standards
+* **Objective**: Redesign EmptyState icons and guiding buttons.
+
+### [x] P13-T11: Loading Skeletons & Shimmer Timings
+* **Objective**: Transition skeletons to linear horizontal gradients.
+
+### [x] P13-T12: Bottom Translucent Overlay Toasts
+* **Objective**: Re-style toasts to theme-aware overlay boxes.
+
+### [x] P13-T13: Overlay Dialogs & Centered Modals
+* **Objective**: Configure centered modal blurs and limits.
+
+### [x] P13-T14: Motion, Expo-Out & Staggered Reveals
+* **Objective**: Implement staggered animators and cubic-bezier timings.
+
+### [x] P13-T15: Final UI Consistency & A11y Audit
+* **Objective**: Run overall keyboard path audits and contrast verification.
+
+### [x] UI Refinement Passes:
+* **Objective**: Refine Toast theme colors and redesign injected floating action button.
 
 ---
 

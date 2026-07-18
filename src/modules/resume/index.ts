@@ -2,6 +2,7 @@ export * from './components/ResumeList';
 export * from './components/ResumeCard';
 export * from './components/ResumeView';
 export * from './components/UploadButton';
+export * from './components/ResumeTitleModal';
 export * from './hooks/useResume';
 export * from './hooks/useUpload';
 export * from './storage/resumeStore';

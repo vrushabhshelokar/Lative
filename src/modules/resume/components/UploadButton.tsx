@@ -54,7 +54,7 @@ export const UploadButton: React.FC<UploadButtonProps> = ({ onSuccess }) => {
             <span className="text-xs font-semibold text-text-primary leading-normal">
               {isUploading ? 'Parsing Resume Document...' : 'Upload Resume PDF'}
             </span>
-            <span className="text-[10px] text-text-secondary leading-normal">
+            <span className="text-[11px] text-text-secondary leading-normal">
               {isUploading
                 ? 'Extracting raw text structures'
                 : 'Drag & drop here or click to browse files'}
@@ -64,7 +64,7 @@ export const UploadButton: React.FC<UploadButtonProps> = ({ onSuccess }) => {
       </div>
 
       {error && (
-        <span className="text-[10px] text-danger font-medium text-center mt-0.5 select-none">
+        <span className="text-[11px] text-danger font-medium text-center mt-0.5 select-none">
           {error}
         </span>
       )}

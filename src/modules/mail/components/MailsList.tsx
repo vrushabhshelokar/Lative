@@ -1,9 +1,9 @@
 import React from 'react';
-import { Plus, Mail as MailIcon } from 'lucide-react';
+import { Mail as MailIcon } from 'lucide-react';
 import { useMails } from '../hooks/useMails';
 import { MailCard } from './MailCard';
 import { Mail } from '../types';
-import { Button } from '@/shared/components/Button';
+import { AddButton } from '@/shared/components/AddButton';
 import { Skeleton } from '@/shared/components/Skeleton';
 import { EmptyState } from '@/shared/components/EmptyState';
 
@@ -49,26 +49,22 @@ export const MailsList: React.FC<MailsListProps> = ({ onAdd, onEdit, onDelete })
         <span className="text-xs font-semibold text-text-secondary select-none">
           Saved Emails ({mails.length})
         </span>
-        <Button
-          variant="secondary"
-          size="sm"
+        <AddButton
+          label="Add Email"
           onClick={onAdd}
-          className="flex items-center gap-1 py-1 px-2.5 text-xs font-medium"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          <span>Add Email</span>
-        </Button>
+        />
       </div>
 
       {/* Scrollable list */}
       <div className="flex-1 overflow-y-auto px-4 py-3.5 flex flex-col gap-3 min-h-0">
-        {mails.map((mail) => (
-          <MailCard
-            key={mail.id}
-            mail={mail}
-            onEdit={onEdit}
-            onDelete={onDelete}
-          />
+        {mails.map((mail, index) => (
+          <div key={mail.id} className={`animate-fade-in-up stagger-${Math.min(index + 1, 8)}`}>
+            <MailCard
+              mail={mail}
+              onEdit={onEdit}
+              onDelete={onDelete}
+            />
+          </div>
         ))}
       </div>
     </div>

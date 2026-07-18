@@ -1,6 +1,7 @@
-import { CertificateRecord } from '@/types/database';
+import { CertificateRecord, CertificateMetadata } from '@/types/database';
 
 export type Certificate = CertificateRecord;
+export type { CertificateMetadata };
 
 export interface CreateCertificateInput {
   fileName: string;
