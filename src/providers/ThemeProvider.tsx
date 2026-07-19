@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { safeStorage } from '@/lib/chrome';
+import { useSettings } from '@/modules/settings';
 
 export type Theme = 'light' | 'dark' | 'system';
 
@@ -13,54 +13,38 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>('system');
+  const { settings, updateTheme } = useSettings();
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const loadTheme = async () => {
-      const storedTheme = await safeStorage.get('theme', 'system');
-      setThemeState(storedTheme as Theme);
-    };
-    loadTheme();
-  }, []);
-
-  useEffect(() => {
     const handleThemeChange = () => {
-      const root = document.documentElement;
       let darkResolved = false;
 
-      if (theme === 'system') {
+      if (settings.theme === 'system') {
         darkResolved = window.matchMedia('(prefers-color-scheme: dark)').matches;
       } else {
-        darkResolved = theme === 'dark';
+        darkResolved = settings.theme === 'dark';
       }
 
       setIsDark(darkResolved);
-
-      if (darkResolved) {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
     };
 
     handleThemeChange();
 
-    if (theme === 'system') {
+    if (settings.theme === 'system') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       const listener = () => handleThemeChange();
       mediaQuery.addEventListener('change', listener);
       return () => mediaQuery.removeEventListener('change', listener);
     }
-  }, [theme]);
+  }, [settings.theme]);
 
   const setTheme = async (newTheme: Theme) => {
-    setThemeState(newTheme);
-    await safeStorage.set('theme', newTheme);
+    await updateTheme(newTheme);
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, isDark }}>
+    <ThemeContext.Provider value={{ theme: settings.theme as Theme, setTheme, isDark }}>
       {children}
     </ThemeContext.Provider>
   );

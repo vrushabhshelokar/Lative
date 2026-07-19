@@ -9,13 +9,17 @@ export interface ResumeCardProps {
   onDelete: (id: string) => void;
   onReplace: (id: string, file: File) => Promise<void>;
   onUpdateTitle: (id: string, title?: string) => Promise<void>;
+  isSelected?: boolean;
+  onSelectToggle?: () => void;
 }
 
 export const ResumeCard: React.FC<ResumeCardProps> = ({
   resume,
   onDelete,
   onReplace,
-  onUpdateTitle
+  onUpdateTitle,
+  isSelected = false,
+  onSelectToggle
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const toast = useToast();
@@ -86,17 +90,54 @@ export const ResumeCard: React.FC<ResumeCardProps> = ({
   const hasTitle = !!resume.title;
 
   return (
-    <div className="flex flex-col gap-2.5 p-3.5 bg-card dark:bg-gradient-to-b dark:from-white/[0.06] dark:to-white/[0.01] border border-border dark:border-white/[0.06] rounded-large shadow-card dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] hover:border-border/80 dark:hover:border-white/[0.12] transition-all select-none font-sans group">
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        accept=".pdf"
-        className="hidden"
-      />
+    <div 
+      className={`flex items-center gap-3 p-3.5 border rounded-large shadow-card dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] transition-all select-none font-sans group ${
+        isSelected
+          ? 'bg-accent/[0.04] border-accent/40 dark:bg-accent/[0.08] dark:border-accent/40 shadow-[0_0_8px_rgba(94,106,210,0.05)]'
+          : 'bg-card dark:bg-gradient-to-b dark:from-white/[0.06] dark:to-white/[0.01] border-border dark:border-white/[0.06] hover:border-border/80 dark:hover:border-white/[0.12]'
+      }`}
+    >
+      {onSelectToggle && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelectToggle();
+          }}
+          className={`w-3.5 h-3.5 rounded border flex items-center justify-center cursor-pointer shrink-0 transition-all focus:outline-none focus:ring-1 focus:ring-accent ${
+            isSelected
+              ? 'bg-accent border-accent text-white'
+              : 'bg-card border-border hover:border-border-hover dark:bg-white/[0.03] dark:border-white/[0.12] dark:hover:border-white/[0.20]'
+          }`}
+          aria-checked={isSelected}
+          role="checkbox"
+        >
+          {isSelected && (
+            <svg
+              className="w-2.5 h-2.5 stroke-current text-white shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          )}
+        </button>
+      )}
 
-      {/* Rows Container */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex-1 min-w-0 flex flex-col gap-2.5">
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept=".pdf"
+          className="hidden"
+        />
+
+        {/* Rows Container */}
+        <div className="flex flex-col gap-1.5">
         {/* Row 1: File icon + Title */}
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="w-7 h-7 rounded-lg bg-background-secondary/60 border border-border dark:bg-white/[0.04] dark:border-white/[0.08] flex items-center justify-center text-text-secondary group-hover:text-accent transition-colors shrink-0">
@@ -176,6 +217,8 @@ export const ResumeCard: React.FC<ResumeCardProps> = ({
         >
           <Trash2 className="w-3.5 h-3.5" />
         </button>
+      </div>
+
       </div>
 
       <ResumeTitleModal

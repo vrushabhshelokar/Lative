@@ -10,6 +10,8 @@ import {
 } from 'lucide-react';
 import { TabId, routes } from './routes';
 
+import { useThemeContext } from "@/providers/ThemeProvider";
+
 interface AppLayoutProps {
   activeTab: TabId;
   onTabChange: (tabId: TabId) => void;
@@ -31,6 +33,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   onTabChange,
   children
 }) => {
+  const { isDark } = useThemeContext();
+
   return (
     <div className="w-[380px] h-[600px] flex flex-col bg-background text-text-primary overflow-hidden font-sans border border-border/60 dark:border-white/[0.08] relative">
       {/* Cinematic Ambient Light Pools */}
@@ -43,13 +47,21 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       <header className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card/75 dark:bg-card/40 backdrop-blur-md select-none z-10 relative shrink-0">
   <div className="flex items-center gap-2">
     <img
-      src="/images/lative_logo.png"
+      src={
+        isDark
+          ? "/images/lative_dark.png"
+          : "/images/lative_light.png"
+      }
       alt="Lative"
       className="w-7 h-7 object-contain"
     />
 
     <img
-      src="/images/lative.png"
+      src={
+        isDark
+          ? "/images/lative_dark_text.png"
+          : "/images/lative_light_text.png"
+      }
       alt="Lative"
       className="h-5 object-contain"
     />

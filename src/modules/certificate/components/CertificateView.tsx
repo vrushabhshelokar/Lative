@@ -10,7 +10,9 @@ export const CertificateView: React.FC = () => {
   const toast = useToast();
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [selectedCertificateId, setSelectedCertificateId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isActionLoading, setIsActionLoading] = useState(false);
 
   const handleDeleteClick = (id: string) => {
@@ -18,15 +20,49 @@ export const CertificateView: React.FC = () => {
     setIsDeleteOpen(true);
   };
 
+  const handleSelectToggle = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
   const handleDeleteConfirm = async () => {
     if (!selectedCertificateId) return;
     try {
       setIsActionLoading(true);
       await deleteCertificate(selectedCertificateId);
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        next.delete(selectedCertificateId);
+        return next;
+      });
       setIsDeleteOpen(false);
       toast.success('Certificate deleted.');
     } catch {
       toast.error('Failed to delete certificate.');
+    } finally {
+      setIsActionLoading(false);
+    }
+  };
+
+  const handleBulkDeleteConfirm = async () => {
+    try {
+      setIsActionLoading(true);
+      const idsArray = Array.from(selectedIds);
+      for (const id of idsArray) {
+        await deleteCertificate(id);
+      }
+      setSelectedIds(new Set());
+      setIsBulkDeleteOpen(false);
+      toast.success('Selected certificates deleted.');
+    } catch {
+      toast.error('Failed to delete selected certificates.');
     } finally {
       setIsActionLoading(false);
     }
@@ -51,6 +87,9 @@ export const CertificateView: React.FC = () => {
         onReplace={handleReplace}
         onUpload={handleUpload}
         onUpdateMetadata={handleUpdateMetadata}
+        selectedIds={selectedIds}
+        onSelectToggle={handleSelectToggle}
+        onDeleteSelected={() => setIsBulkDeleteOpen(true)}
       />
 
       <ConfirmDialog
@@ -60,6 +99,17 @@ export const CertificateView: React.FC = () => {
         title="Delete Certificate"
         description="Are you sure you want to delete this certificate? This action cannot be undone."
         confirmText="Delete"
+        isDestructive
+        isLoading={isActionLoading}
+      />
+
+      <ConfirmDialog
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteConfirm}
+        title="Delete Selected Certificates"
+        description={`Are you sure you want to delete the ${selectedIds.size} selected certificates? This action cannot be undone.`}
+        confirmText="Delete Selected"
         isDestructive
         isLoading={isActionLoading}
       />

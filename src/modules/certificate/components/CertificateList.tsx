@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { Award } from 'lucide-react';
+import { Award, Trash2 } from 'lucide-react';
 import { useCertificate } from '../hooks/useCertificate';
 import { CertificateCard } from './CertificateCard';
 import { AddButton } from '@/shared/components/AddButton';
+import { Button } from '@/shared/components/Button';
 import { Skeleton } from '@/shared/components/Skeleton';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { useToast } from '@/shared/hooks/useToast';
@@ -13,13 +14,19 @@ export interface CertificateListProps {
   onReplace: (id: string, file: File) => Promise<void>;
   onUpload: (file: File) => Promise<void>;
   onUpdateMetadata: (id: string, metadata?: CertificateMetadata) => Promise<void>;
+  selectedIds: Set<string>;
+  onSelectToggle: (id: string) => void;
+  onDeleteSelected: () => void;
 }
 
 export const CertificateList: React.FC<CertificateListProps> = ({
   onDelete,
   onReplace,
   onUpload,
-  onUpdateMetadata
+  onUpdateMetadata,
+  selectedIds,
+  onSelectToggle,
+  onDeleteSelected
 }) => {
   const { certificates, isLoading } = useCertificate();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -116,10 +123,29 @@ export const CertificateList: React.FC<CertificateListProps> = ({
               onDelete={onDelete}
               onReplace={onReplace}
               onUpdateMetadata={onUpdateMetadata}
+              isSelected={selectedIds.has(cert.id)}
+              onSelectToggle={() => onSelectToggle(cert.id)}
             />
           </div>
         ))}
       </div>
+
+      {/* Bulk Action Bar */}
+      {selectedIds.size > 0 && (
+        <div className="shrink-0 p-3 border-t border-border/40 dark:border-white/[0.08] bg-background/95 dark:bg-background-secondary/95 backdrop-blur-md flex items-center justify-between gap-3 animate-fade-in-up">
+          <span className="text-[11px] font-medium text-text-primary">
+            {selectedIds.size} {selectedIds.size === 1 ? 'item' : 'items'} selected
+          </span>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={onDeleteSelected}
+            leftIcon={<Trash2 className="w-3.5 h-3.5" />}
+          >
+            Delete Selected
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

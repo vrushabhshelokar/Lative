@@ -12,7 +12,9 @@ export const LinksView: React.FC = () => {
   
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [selectedLink, setSelectedLink] = useState<Link | undefined>(undefined);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isActionLoading, setIsActionLoading] = useState(false);
 
   const handleAddClick = () => {
@@ -30,6 +32,18 @@ export const LinksView: React.FC = () => {
     setIsDeleteOpen(true);
   };
 
+  const handleSelectToggle = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
   const handleFormSubmit = async (input: { id: string; url: string }) => {
     if (selectedLink) {
       await updateLink(selectedLink.id, input);
@@ -45,10 +59,32 @@ export const LinksView: React.FC = () => {
     try {
       setIsActionLoading(true);
       await deleteLink(selectedLink.id);
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        next.delete(selectedLink.id);
+        return next;
+      });
       setIsDeleteOpen(false);
       toast.success('Link deleted.');
     } catch {
       toast.error('Failed to delete.');
+    } finally {
+      setIsActionLoading(false);
+    }
+  };
+
+  const handleBulkDeleteConfirm = async () => {
+    try {
+      setIsActionLoading(true);
+      const idsArray = Array.from(selectedIds);
+      for (const id of idsArray) {
+        await deleteLink(id);
+      }
+      setSelectedIds(new Set());
+      setIsBulkDeleteOpen(false);
+      toast.success('Selected links deleted.');
+    } catch {
+      toast.error('Failed to delete selected links.');
     } finally {
       setIsActionLoading(false);
     }
@@ -60,6 +96,9 @@ export const LinksView: React.FC = () => {
         onAdd={handleAddClick}
         onEdit={handleEditClick}
         onDelete={handleDeleteClick}
+        selectedIds={selectedIds}
+        onSelectToggle={handleSelectToggle}
+        onDeleteSelected={() => setIsBulkDeleteOpen(true)}
       />
 
       <LinkFormModal
@@ -76,6 +115,17 @@ export const LinksView: React.FC = () => {
         title="Delete Link"
         description={`Are you sure you want to delete "${selectedLink?.id}"? This action cannot be undone.`}
         confirmText="Delete"
+        isDestructive
+        isLoading={isActionLoading}
+      />
+
+      <ConfirmDialog
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteConfirm}
+        title="Delete Selected Links"
+        description={`Are you sure you want to delete the ${selectedIds.size} selected profiles? This action cannot be undone.`}
+        confirmText="Delete Selected"
         isDestructive
         isLoading={isActionLoading}
       />

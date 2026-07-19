@@ -9,7 +9,9 @@ export const ResumeView: React.FC = () => {
   const toast = useToast();
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [selectedResumeId, setSelectedResumeId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isActionLoading, setIsActionLoading] = useState(false);
 
   const handleDeleteClick = (id: string) => {
@@ -17,15 +19,49 @@ export const ResumeView: React.FC = () => {
     setIsDeleteOpen(true);
   };
 
+  const handleSelectToggle = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
   const handleDeleteConfirm = async () => {
     if (!selectedResumeId) return;
     try {
       setIsActionLoading(true);
       await deleteResume(selectedResumeId);
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        next.delete(selectedResumeId);
+        return next;
+      });
       setIsDeleteOpen(false);
       toast.success('Resume deleted.');
     } catch {
       toast.error('Failed to delete resume.');
+    } finally {
+      setIsActionLoading(false);
+    }
+  };
+
+  const handleBulkDeleteConfirm = async () => {
+    try {
+      setIsActionLoading(true);
+      const idsArray = Array.from(selectedIds);
+      for (const id of idsArray) {
+        await deleteResume(id);
+      }
+      setSelectedIds(new Set());
+      setIsBulkDeleteOpen(false);
+      toast.success('Selected resumes deleted.');
+    } catch {
+      toast.error('Failed to delete selected resumes.');
     } finally {
       setIsActionLoading(false);
     }
@@ -45,6 +81,9 @@ export const ResumeView: React.FC = () => {
         onDelete={handleDeleteClick}
         onReplace={handleReplace}
         onUpdateTitle={handleUpdateTitle}
+        selectedIds={selectedIds}
+        onSelectToggle={handleSelectToggle}
+        onDeleteSelected={() => setIsBulkDeleteOpen(true)}
       />
 
       <ConfirmDialog
@@ -54,6 +93,17 @@ export const ResumeView: React.FC = () => {
         title="Delete Resume"
         description="Are you sure you want to delete this resume? This will also remove all parsed profile categories."
         confirmText="Delete"
+        isDestructive
+        isLoading={isActionLoading}
+      />
+
+      <ConfirmDialog
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteConfirm}
+        title="Delete Selected Resumes"
+        description={`Are you sure you want to delete the ${selectedIds.size} selected resumes? This action cannot be undone.`}
+        confirmText="Delete Selected"
         isDestructive
         isLoading={isActionLoading}
       />

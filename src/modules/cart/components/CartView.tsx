@@ -12,8 +12,10 @@ export const CartView: React.FC = () => {
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CartItem | undefined>(undefined);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isActionLoading, setIsActionLoading] = useState(false);
 
   const handleAddClick = () => {
@@ -31,6 +33,18 @@ export const CartView: React.FC = () => {
     setIsDeleteOpen(true);
   };
 
+  const handleSelectToggle = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
   const handleFormSubmit = async (input: { title: string; url: string }) => {
     if (selectedItem) {
       await updateCartItem(selectedItem.id, input);
@@ -46,10 +60,32 @@ export const CartView: React.FC = () => {
     try {
       setIsActionLoading(true);
       await deleteCartItem(selectedId);
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        next.delete(selectedId);
+        return next;
+      });
       setIsDeleteOpen(false);
       toast.success('Cart item deleted.');
     } catch {
       toast.error('Failed to delete cart item.');
+    } finally {
+      setIsActionLoading(false);
+    }
+  };
+
+  const handleBulkDeleteConfirm = async () => {
+    try {
+      setIsActionLoading(true);
+      const idsArray = Array.from(selectedIds);
+      for (const id of idsArray) {
+        await deleteCartItem(id);
+      }
+      setSelectedIds(new Set());
+      setIsBulkDeleteOpen(false);
+      toast.success('Selected cart items deleted.');
+    } catch {
+      toast.error('Failed to delete selected cart items.');
     } finally {
       setIsActionLoading(false);
     }
@@ -61,6 +97,9 @@ export const CartView: React.FC = () => {
         onAdd={handleAddClick}
         onEdit={handleEditClick}
         onDelete={handleDeleteClick}
+        selectedIds={selectedIds}
+        onSelectToggle={handleSelectToggle}
+        onDeleteSelected={() => setIsBulkDeleteOpen(true)}
       />
 
       <CartFormModal
@@ -77,6 +116,17 @@ export const CartView: React.FC = () => {
         title="Delete Cart Item"
         description="Are you sure you want to delete this cart item? This action cannot be undone."
         confirmText="Delete"
+        isDestructive
+        isLoading={isActionLoading}
+      />
+
+      <ConfirmDialog
+        isOpen={isBulkDeleteOpen}
+        onClose={() => setIsBulkDeleteOpen(false)}
+        onConfirm={handleBulkDeleteConfirm}
+        title="Delete Selected Cart Items"
+        description={`Are you sure you want to delete the ${selectedIds.size} selected cart items? This action cannot be undone.`}
+        confirmText="Delete Selected"
         isDestructive
         isLoading={isActionLoading}
       />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Info } from 'lucide-react';
 import { useSettings } from '../hooks/useSettings';
 import { ApiKeyInput } from './ApiKeyInput';
 import { ThemeSelector } from './ThemeSelector';
@@ -49,6 +50,19 @@ export const SettingsPage: React.FC = () => {
 
         {/* Data Wiping Operations */}
         <ClearDataButton />
+
+        {/* Quick Fix Section */}
+        <div className="p-3 bg-card border border-border rounded-medium flex items-start gap-2.5">
+          <Info className="w-3.5 h-3.5 text-text-secondary mt-0.5 shrink-0" />
+          <div className="flex flex-col gap-0.5">
+            <span className="text-xs font-semibold text-text-primary leading-none">
+              Quick Fix
+            </span>
+            <span className="text-[11px] text-text-secondary leading-normal mt-1">
+              If some features are not working as expected, refresh the current webpage and try again.
+            </span>
+          </div>
+        </div>
 
         {/* About & Support Links */}
         <AboutSection />

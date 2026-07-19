@@ -1,9 +1,10 @@
 import React from 'react';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Trash2 } from 'lucide-react';
 import { useCart } from '../hooks/useCart';
 import { CartCard } from './CartCard';
 import { CartItem } from '../types';
 import { AddButton } from '@/shared/components/AddButton';
+import { Button } from '@/shared/components/Button';
 import { Skeleton } from '@/shared/components/Skeleton';
 import { EmptyState } from '@/shared/components/EmptyState';
 
@@ -11,9 +12,19 @@ export interface CartListProps {
   onAdd: () => void;
   onEdit: (item: CartItem) => void;
   onDelete: (id: string) => void;
+  selectedIds: Set<string>;
+  onSelectToggle: (id: string) => void;
+  onDeleteSelected: () => void;
 }
 
-export const CartList: React.FC<CartListProps> = ({ onAdd, onEdit, onDelete }) => {
+export const CartList: React.FC<CartListProps> = ({ 
+  onAdd, 
+  onEdit, 
+  onDelete,
+  selectedIds,
+  onSelectToggle,
+  onDeleteSelected
+}) => {
   const { cartItems, isLoading } = useCart();
 
   if (isLoading) {
@@ -63,10 +74,29 @@ export const CartList: React.FC<CartListProps> = ({ onAdd, onEdit, onDelete }) =
               cartItem={item}
               onEdit={onEdit}
               onDelete={onDelete}
+              isSelected={selectedIds.has(item.id)}
+              onSelectToggle={() => onSelectToggle(item.id)}
             />
           </div>
         ))}
       </div>
+
+      {/* Bulk Action Bar */}
+      {selectedIds.size > 0 && (
+        <div className="shrink-0 p-3 border-t border-border/40 dark:border-white/[0.08] bg-background/95 dark:bg-background-secondary/95 backdrop-blur-md flex items-center justify-between gap-3 animate-fade-in-up">
+          <span className="text-[11px] font-medium text-text-primary">
+            {selectedIds.size} {selectedIds.size === 1 ? 'item' : 'items'} selected
+          </span>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={onDeleteSelected}
+            leftIcon={<Trash2 className="w-3.5 h-3.5" />}
+          >
+            Delete Selected
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
