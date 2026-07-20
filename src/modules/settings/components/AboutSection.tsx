@@ -22,7 +22,7 @@ export const AboutSection: React.FC = () => {
             <ExternalLink className="w-3.5 h-3.5 text-text-secondary group-hover:text-accent" />
           </a>
           <a
-            href="https://youtube.com/lative-tutorial"
+            href="https://youtu.be/wsA7GSXyW80?si=9fLd_2CznwmUQJuB"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-between text-xs text-text-primary hover:text-accent font-medium py-0.5 group"
