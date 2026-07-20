@@ -6,8 +6,12 @@
   "description": "Privacy-first local career assistant browser extension",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "zip": "powershell -Command \"Compress-Archive -Path dist\\* -DestinationPath lative-v1.0.0.zip -Force\"",
+    "build:chrome": "tsc && vite build",
+    "build:firefox": "tsc && vite build --mode firefox && node -e \"require('fs').copyFileSync('manifests/manifest.firefox.json', 'dist-firefox/manifest.json')\"",
+    "build": "npm run build:chrome && npm run build:firefox",
+    "zip:chrome": "powershell -Command \"Compress-Archive -Path dist\\* -DestinationPath lative-chrome-v1.0.0.zip -Force\"",
+    "zip:firefox": "powershell -Command \"Compress-Archive -Path dist-firefox\\* -DestinationPath lative-firefox-v1.0.0.zip -Force\"",
+    "zip": "npm run zip:chrome && npm run zip:firefox",
     "release": "npm run build && npm run zip",
     "lint": "eslint .",
     "preview": "vite preview"
