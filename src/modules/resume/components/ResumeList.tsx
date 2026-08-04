@@ -7,6 +7,7 @@ import { UploadButton } from './UploadButton';
 import { Button } from '@/shared/components/Button';
 import { Skeleton } from '@/shared/components/Skeleton';
 import { EmptyState } from '@/shared/components/EmptyState';
+import { Info } from 'lucide-react';
 
 export interface ResumeListProps {
   onDelete: (id: string) => void;
@@ -75,6 +76,18 @@ export const ResumeList: React.FC<ResumeListProps> = ({
       </div>
 
       <div className="h-[1px] bg-border/40 shrink-0 mx-4 my-1" />
+
+      <div className="p-3 bg-card border border-border rounded-medium flex items-start gap-2.5">
+          <Info className="w-3.5 h-3.5 text-text-secondary mt-0.5 shrink-0" />
+          <div className="flex flex-col gap-0.5">
+            <span className="text-xs font-semibold text-text-primary leading-none">
+              Resume Upload Tip
+            </span>
+            <span className="text-[11px] text-text-secondary leading-normal mt-1">
+              Lative copies only the resume filename. When uploading, first open the folder containing your resume in the file picker, then paste or search the filename.
+            </span>
+          </div>
+        </div>
 
       {/* Toolbar header */}
       <div className="px-4 py-2 shrink-0">

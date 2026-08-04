@@ -36,14 +36,36 @@ export class FloatingButton {
       outline: 'none'
     });
 
-    // Inline SVG ShoppingCart icon
-    button.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
-        <circle cx="8" cy="21" r="1"></circle>
-        <circle cx="19" cy="21" r="1"></circle>
-        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
-      </svg>
-    `;
+    // Inline SVG ShoppingCart icon created via safe DOM APIs
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('width', '16');
+    svg.setAttribute('height', '16');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '1.8');
+    svg.setAttribute('stroke-linecap', 'round');
+    svg.setAttribute('stroke-linejoin', 'round');
+    svg.style.display = 'block';
+
+    const circle1 = document.createElementNS(svgNS, 'circle');
+    circle1.setAttribute('cx', '8');
+    circle1.setAttribute('cy', '21');
+    circle1.setAttribute('r', '1');
+
+    const circle2 = document.createElementNS(svgNS, 'circle');
+    circle2.setAttribute('cx', '19');
+    circle2.setAttribute('cy', '21');
+    circle2.setAttribute('r', '1');
+
+    const path = document.createElementNS(svgNS, 'path');
+    path.setAttribute('d', 'M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12');
+
+    svg.appendChild(circle1);
+    svg.appendChild(circle2);
+    svg.appendChild(path);
+    button.appendChild(svg);
 
     button.addEventListener('mouseenter', () => {
       button.style.transform = 'translateY(-2px) scale(1.02)';
