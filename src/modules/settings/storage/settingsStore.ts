@@ -12,7 +12,7 @@ export const DEFAULT_AI_CONFIG: AIConfig = {
 
 const DEFAULT_SETTINGS: AppSettings = {
   aiConfig: DEFAULT_AI_CONFIG,
-  theme: 'system',
+  theme: 'light',
   floatingButtonEnabled: false
 };
 

@@ -17,7 +17,7 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [settings, setSettings] = useState<AppSettings>({
     aiConfig: DEFAULT_AI_CONFIG,
-    theme: 'system',
+    theme: 'light',
     floatingButtonEnabled: false
   });
   const [isLoading, setIsLoading] = useState(true);
@@ -110,7 +110,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     await settingsStore.clearAllSettings();
     setSettings({
       aiConfig: DEFAULT_AI_CONFIG,
-      theme: 'system',
+      theme: 'light',
       floatingButtonEnabled: false
     });
   };

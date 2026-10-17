@@ -21,7 +21,7 @@ export const UploadButton: React.FC<UploadButtonProps> = ({ onSuccess }) => {
       <div
         onClick={handleClick}
         {...dragHandlers}
-        className={`relative flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-medium cursor-pointer transition-all duration-200 select-none
+        className={`relative flex flex-col items-center justify-center py-3 px-4 border-2 border-dashed rounded-medium cursor-pointer transition-all duration-200 select-none
           ${
             isDragging
               ? 'border-accent bg-accent/5 scale-[0.99] shadow-inner'
@@ -39,14 +39,14 @@ export const UploadButton: React.FC<UploadButtonProps> = ({ onSuccess }) => {
           disabled={isUploading}
         />
 
-        <div className="flex flex-col items-center text-center gap-2">
+        <div className="flex flex-col items-center text-center gap-1.5">
           {isUploading ? (
-            <div className="w-10 h-10 rounded-full bg-background-secondary border border-border flex items-center justify-center text-accent">
-              <Loader2 className="w-5 h-5 animate-spin" />
+            <div className="w-8 h-8 rounded-full bg-background-secondary border border-border flex items-center justify-center text-accent">
+              <Loader2 className="w-4 h-4 animate-spin" />
             </div>
           ) : (
-            <div className="w-10 h-10 rounded-full bg-background-secondary border border-border flex items-center justify-center text-text-secondary">
-              <Upload className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-full bg-background-secondary border border-border flex items-center justify-center text-text-secondary">
+              <Upload className="w-4 h-4" />
             </div>
           )}
 
